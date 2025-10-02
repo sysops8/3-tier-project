@@ -30,7 +30,7 @@
 
 ### Используемые технологии
 
-- **Виртуализация**: Proxmox VE 8.x
+- **Виртуализация**: Proxmox VE 9.x
 - **Оркестрация**: Kubernetes (K3s)
 - **CI/CD**: Jenkins, ArgoCD
 - **Мониторинг**: Prometheus, Grafana, AlertManager
