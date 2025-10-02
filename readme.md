@@ -807,7 +807,7 @@ sudo systemctl start minio
 
 # Проверка
 sudo systemctl status minio
-curl http://minio.local.lab:9000/minio/health/live
+curl -I http://minio.local.lab:9000/minio/health/live
 # Ожидаем: HTTP 200 OK
 ```
 
