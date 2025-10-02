@@ -535,6 +535,55 @@ ping -c 2 google.com
 
 ### Настройка DNS на всех VM
 
+
+#### Ручная настройка jumphost
+
+```bash
+ssh admin@jumphost.local.lab
+
+sudo systemctl disable systemd-resolved
+sudo systemctl stop systemd-resolved
+sudo rm -f /etc/resolv.conf
+
+sudo bash -c 'cat > /etc/resolv.conf <<EOF
+nameserver 192.168.100.53
+nameserver 8.8.8.8
+search local.lab
+EOF'
+
+sudo chattr +i /etc/resolv.conf
+
+# Netplan для jumphost (2 интерфейса)
+sudo bash -c 'cat > /etc/netplan/00-installer-config.yaml <<EOF
+network:
+  version: 2
+  ethernets:
+    eth0:
+      dhcp4: no
+      addresses: [10.0.10.102/24]
+      routes:
+        - to: 0.0.0.0/0
+          via: 10.0.10.1
+      nameservers:
+        addresses: [192.168.100.53, 8.8.8.8]
+        search: [local.lab]
+    eth1:
+      dhcp4: no
+      addresses: [192.168.100.5/24]
+      nameservers:
+        addresses: [192.168.100.53]
+        search: [local.lab]
+EOF'
+
+sudo apt install -y openvswitch-switch
+sudo chmod 600 /etc/netplan/00-installer-config.yaml
+sudo netplan apply
+
+# Проверка
+ping -c 2 google.com
+nslookup k3s-master.local.lab
+```
+
 Создайте скрипт для автоматизации:
 
 ```bash
@@ -634,53 +683,6 @@ done
 # Для VM с двумя интерфейсами (jumphost уже настроен вручную)
 ```
 
-#### Ручная настройка jumphost
-
-```bash
-ssh admin@jumphost.local.lab
-
-sudo systemctl disable systemd-resolved
-sudo systemctl stop systemd-resolved
-sudo rm -f /etc/resolv.conf
-
-sudo bash -c 'cat > /etc/resolv.conf <<EOF
-nameserver 192.168.100.53
-nameserver 8.8.8.8
-search local.lab
-EOF'
-
-sudo chattr +i /etc/resolv.conf
-
-# Netplan для jumphost (2 интерфейса)
-sudo bash -c 'cat > /etc/netplan/00-installer-config.yaml <<EOF
-network:
-  version: 2
-  ethernets:
-    eth0:
-      dhcp4: no
-      addresses: [10.0.10.102/24]
-      routes:
-        - to: 0.0.0.0/0
-          via: 10.0.10.1
-      nameservers:
-        addresses: [192.168.100.53, 8.8.8.8]
-        search: [local.lab]
-    eth1:
-      dhcp4: no
-      addresses: [192.168.100.5/24]
-      nameservers:
-        addresses: [192.168.100.53]
-        search: [local.lab]
-EOF'
-
-sudo apt install -y openvswitch-switch
-sudo chmod 600 /etc/netplan/00-installer-config.yaml
-sudo netplan apply
-
-# Проверка
-ping -c 2 google.com
-nslookup k3s-master.local.lab
-```
 
 ### Проверка доступности интернета
 
