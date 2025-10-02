@@ -673,6 +673,8 @@ network:
         search: [local.lab]
 EOF'
 
+sudo apt install -y openvswitch-switch
+sudo chmod 600 /etc/netplan/00-installer-config.yaml
 sudo netplan apply
 
 # Проверка
