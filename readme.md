@@ -1167,7 +1167,7 @@ kubectl -n longhorn-system get ingress
 
 ```bash
 cat > /tmp/traefik-values.yaml <<EOF
-# Публикация на NodePort для доступа извне
+# Публикация на NodePort для доступа извне (Публикация сервисов Traefik как NodePort)
 service:
   type: NodePort
 
@@ -1181,10 +1181,14 @@ ports:
     nodePort: 30443
     exposedPort: 443
 
-# Dashboard
+# Включаем Dashboard через IngressRoute
 ingressRoute:
   dashboard:
     enabled: true
+    entryPoints:
+      - web
+      - websecure
+    matchRule: Host(\`traefik.local.lab\`) && (PathPrefix(\`/dashboard\`) || PathPrefix(\`/api\`))
 
 # Логи
 logs:
