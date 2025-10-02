@@ -514,6 +514,7 @@ network:
         addresses: [192.168.100.53]
         search: [local.lab]
 ```
+# Установка правильных прав
 sudo chmod 600 /etc/netplan/00-installer-config.yaml
 
 Применить:
