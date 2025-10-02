@@ -516,7 +516,7 @@ network:
 ```
 ```bash
 # Установка зависимости для netplan и настройка прав на файл сетевой конфигурации
-sudo apt install openvswitch-switch
+sudo apt install -y openvswitch-switch
 sudo chmod 600 /etc/netplan/00-installer-config.yaml
 ```
 
