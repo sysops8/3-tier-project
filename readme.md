@@ -379,7 +379,7 @@ sudo chown -R bind:bind /etc/bind/zones
 
 # Перезапуск BIND9
 sudo systemctl restart bind9
-sudo systemctl enable bind9
+sudo systemctl enable named
 
 # Проверка статуса
 sudo systemctl status bind9
