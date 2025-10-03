@@ -279,15 +279,13 @@ authtoken: YOUR_AUTHTOKEN
 tunnels:
   ezyshop-web:
     proto: http
-    addr: 192.168.100.100:80
-    bind_tls: true
+    addr: 192.168.100.100:80    
     inspect: false
     host_header: rewrite
 
   ezyshop-services:
     proto: http
-    addr: 192.168.100.100:80
-    bind_tls: true
+    addr: 192.168.100.100:80    
     inspect: false
     host_header: rewrite
     
