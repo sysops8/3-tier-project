@@ -272,7 +272,7 @@ ngrok version
 ngrok config add-authtoken YOUR_AUTHTOKEN
 
 # Создать конфигурацию для множественных сервисов
-cat > ~/.ngrok2/ngrok.yml <<EOF
+cat > ~/.config/ngrok/ngrok.yml <<EOF
 version: "2"
 authtoken: YOUR_AUTHTOKEN
 
@@ -307,13 +307,20 @@ After=network.target
 Type=simple
 User=admin
 WorkingDirectory=/home/admin
-ExecStart=/usr/local/bin/ngrok start --all --config /home/admin/.ngrok2/ngrok.yml
+ExecStart=/usr/local/bin/ngrok start --all --config ~/.config/ngrok/ngrok.yml
 Restart=always
 RestartSec=10
 
 [Install]
 WantedBy=multi-user.target
 EOF
+
+# Создать пользователя
+sudo useradd -r ngork-user -s /sbin/nologin
+
+# Создать директории
+sudo touch /var/log/ngrok.log
+sudo chown -R ngork-user:ngork-user /var/log/ngrok.log
 
 # Запустить ngrok
 sudo systemctl daemon-reload
