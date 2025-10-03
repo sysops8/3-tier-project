@@ -314,11 +314,11 @@ WantedBy=multi-user.target
 EOF
 
 # Создать пользователя
-sudo useradd -r ngork-user -s /sbin/nologin
+sudo useradd -r ngrok-user -s /sbin/nologin
 
 # Создать директории
 sudo touch /var/log/ngrok.log
-sudo chown -R ngork-user:ngork-user /var/log/ngrok.log
+sudo chown -R ngrok-user:ngrok-user /var/log/ngrok.log
 
 # Запустить ngrok
 sudo systemctl daemon-reload
