@@ -316,7 +316,7 @@ EOF
 # Создать пользователя
 sudo useradd -r ngrok-user -s /sbin/nologin
 
-# Создать директории
+# Создать файл
 sudo touch /var/log/ngrok.log
 sudo chown -R ngrok-user:ngrok-user /var/log/ngrok.log
 
