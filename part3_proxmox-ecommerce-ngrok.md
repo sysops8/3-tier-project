@@ -275,8 +275,8 @@ ngrok config add-authtoken YOUR_AUTHTOKEN
 sudo useradd -r ngrok-user -s /sbin/nologin
 
 # Создать директорию
-# sudo mkdir -p ~/.config/ngrok
-# sudo chown -R ngrok-user:ngrok-user ~/.config/ngrok
+sudo mkdir -p ~/.config/ngrok
+sudo chown -R ngrok-user:ngrok-user ~/.config/ngrok
 
 # Создать конфигурацию для множественных сервисов
 cat > ~/.config/ngrok/ngrok.yml <<EOF
