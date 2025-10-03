@@ -271,13 +271,6 @@ ngrok version
 # Авторизация (замените YOUR_AUTHTOKEN на ваш токен из https://dashboard.ngrok.com)
 ngrok config add-authtoken YOUR_AUTHTOKEN
 
-# Создать пользователя
-sudo useradd -r ngrok-user -s /sbin/nologin
-
-# Создать директорию
-sudo mkdir -p ~/.config/ngrok
-sudo chown -R ngrok-user:ngrok-user ~/.config/ngrok
-
 # Создать конфигурацию для множественных сервисов
 cat > ~/.config/ngrok/ngrok.yml <<EOF
 version: "2"
@@ -322,7 +315,7 @@ EOF
 
 # Создать файл
 sudo touch /var/log/ngrok.log
-sudo chown -R ngrok-user:ngrok-user /var/log/ngrok.log
+sudo chown -R admin:admin /var/log/ngrok.log
 
 # Запустить ngrok
 sudo systemctl daemon-reload
