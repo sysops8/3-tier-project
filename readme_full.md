@@ -360,7 +360,7 @@ sudo bash -c 'cat > /etc/bind/zones/db.10.0.10 <<EOF
 
 ; PTR записи
 50      IN      PTR     cf-tunnel.local.lab.
-50      IN      PTR     ngrok-tunnel.local.lab.
+60      IN      PTR     ngrok-tunnel.local.lab.
 53      IN      PTR     dns-server.local.lab.
 102     IN      PTR     jumphost.local.lab.
 EOF'
