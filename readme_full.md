@@ -1164,56 +1164,123 @@ kubectl -n longhorn-system get ingress
 
 ---
 
-## Ingress Controller (Traefik)
+### 7. LoadBalancer (MetalLB)
 
-### Создание values файла
+MetalLB предоставляет тип сервиса LoadBalancer для bare-metal Kubernetes кластеров, устраняя необходимость в NodePort сервисах.
+
+#### Почему MetalLB?
+
+**Без MetalLB (NodePort):**
+- Нестандартные порты (30080, 30443)
+- Сервис привязан к конкретному узлу
+- Сложная конфигурация для внешнего доступа
+
+**С MetalLB (LoadBalancer):**
+- ✅ Стандартные порты (80, 443)
+- ✅ Плавающие виртуальные IP
+- ✅ Production-ready подход
+- ✅ Простое предоставление внешних сервисов
+
+#### Установка MetalLB
+
+```bash
+# Добавить Helm репозиторий
+helm repo add metallb https://metallb.github.io/metallb
+helm repo update
+
+# Создать namespace
+kubectl create namespace metallb-system
+
+# Установить MetalLB
+helm install metallb metallb/metallb \
+  --namespace metallb-system
+
+# Подождать готовности (30-60 секунд)
+kubectl -n metallb-system get pods -w
+```
+
+#### Настройка пула IP адресов
+
+```bash
+cat <<EOF | kubectl apply -f -
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: main-pool
+  namespace: metallb-system
+spec:
+  addresses:
+  - 192.168.100.100-192.168.100.110  # 10 IP для сервисов
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: l2-advert
+  namespace: metallb-system
+spec:
+  ipAddressPools:
+  - main-pool
+EOF
+```
+
+#### Проверка MetalLB
+
+```bash
+# Проверка подов
+kubectl -n metallb-system get pods
+
+# Проверка пула IP
+kubectl -n metallb-system get ipaddresspool
+kubectl -n metallb-system get l2advertisement
+
+# Просмотр логов
+kubectl -n metallb-system logs -l app=metallb -l component=controller
+kubectl -n metallb-system logs -l app=metallb -l component=speaker
+```
+
+---
+
+### 8. Ingress контроллер (Traefik)
+
+#### Создание файла значений с LoadBalancer
 
 ```bash
 cat > /tmp/traefik-values.yaml <<EOF
-# Публикация на NodePort для доступа извне (Публикация сервисов Traefik как NodePort)
+# Использовать LoadBalancer вместо NodePort
 service:
-  type: NodePort
+  type: LoadBalancer
+  annotations:
+    metallb.universe.tf/loadBalancerIPs: 192.168.100.100
 
 ports:
   web:
     port: 80
-    nodePort: 30080
     exposedPort: 80
   websecure:
     port: 443
-    nodePort: 30443
     exposedPort: 443
 
-# Включаем Dashboard через IngressRoute
 ingressRoute:
   dashboard:
     enabled: true
-    entryPoints:
-      - web
-      - websecure
-    matchRule: Host(\`traefik.local.lab\`) && (PathPrefix(\`/dashboard\`) || PathPrefix(\`/api\`))
 
-# Логи
 logs:
   general:
     level: INFO
   access:
     enabled: true
 
-# Метрики для Prometheus
 metrics:
   prometheus:
     enabled: true
     addEntryPointsLabels: true
     addServicesLabels: true
 
-# Persistence для Let's Encrypt сертификатов
 persistence:
   enabled: true
   size: 1Gi
   storageClass: longhorn
 
-# Resource limits
 resources:
   requests:
     cpu: 100m
@@ -1222,84 +1289,77 @@ resources:
     cpu: 500m
     memory: 512Mi
 
-# Автоматическое перенаправление HTTP -> HTTPS
+# Перенаправление HTTP на HTTPS
 additionalArguments:
   - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
   - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+  - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
 EOF
 ```
 
-### Установка Traefik
+#### Установка Traefik
 
 ```bash
-# Добавление Helm репозитория
 helm repo add traefik https://traefik.github.io/charts
 helm repo update
 
-# Создание namespace
 kubectl create namespace traefik
 
-# Установка
 helm install traefik traefik/traefik \
   --namespace traefik \
   --values /tmp/traefik-values.yaml
 
-# Ожидание готовности
+# Подождать готовности
 kubectl -n traefik get pods -w
 ```
 
-### Проверка Traefik
+#### Проверка Traefik LoadBalancer
 
 ```bash
-# Статус пода
 kubectl -n traefik get pods
 kubectl -n traefik get svc
 
-# Просмотр логов
+# Должен показать EXTERNAL-IP: 192.168.100.100
+# NAME      TYPE           CLUSTER-IP      EXTERNAL-IP       PORT(S)
+# traefik   LoadBalancer   10.43.x.x       192.168.100.100   80:xxx/TCP,443:xxx/TCP
+
 kubectl -n traefik logs -l app.kubernetes.io/name=traefik --tail=50
 ```
 
-### Создание Ingress для Traefik Dashboard
+#### Обновление DNS записей
+
+Все сервисы теперь указывают на IP MetalLB LoadBalancer:
 
 ```bash
-cat <<EOF | kubectl apply -f -
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: traefik-dashboard
-  namespace: traefik
-  annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: web
-spec:
-  rules:
-  - host: traefik.local.lab
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: traefik
-            port:
-              number: 9000
-EOF
-
-# Добавление DNS записи для traefik
 ssh admin@dns-server.local.lab
-sudo bash -c 'echo "traefik        IN      A       192.168.100.10" >> /etc/bind/zones/db.local.lab'
-# Увеличьте Serial в SOA
-sudo nano /etc/bind/zones/db.local.lab  # Serial: 1 -> 2
+
+# Редактировать файл зоны
+sudo nano /etc/bind/zones/db.local.lab
+
+# Обновить все записи сервисов на IP LoadBalancer:
+# Изменить с: 192.168.100.10 (k3s-master)
+# На: 192.168.100.100 (MetalLB LoadBalancer)
+
+# Увеличить Serial (очень важно!)
+# Изменить: Serial: 2
+# На: Serial: 3
+
+# Проверка синтаксиса
+sudo named-checkzone local.lab /etc/bind/zones/db.local.lab
+
+# Перезагрузить зону
 sudo rndc reload local.lab
+
 exit
 
-# Проверка
-dig @192.168.100.53 traefik.local.lab +short
-curl -I http://traefik.local.lab
+# Тест разрешения DNS
+dig @192.168.100.53 ezyshop.local.lab +short
+# Должен вернуть: 192.168.100.100
 ```
 
-### Тестирование Ingress
+#### Тест Ingress с LoadBalancer
 
-Создание тестового приложения:
+Создать тестовое приложение:
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -1362,18 +1422,20 @@ EOF
 
 # Добавление DNS записи
 ssh admin@dns-server.local.lab
-sudo bash -c 'echo "test           IN      A       192.168.100.10" >> /etc/bind/zones/db.local.lab'
+sudo bash -c 'echo "test           IN      A       192.168.100.100" >> /etc/bind/zones/db.local.lab'
 sudo sed -i 's/Serial.*$/Serial: 3/' /etc/bind/zones/db.local.lab
 sudo rndc reload local.lab
 exit
 
-# Проверка
+# Тест доступа (порт не нужен!)
 curl http://test.local.lab
-# Ожидаем: Welcome to nginx!
+# Ожидается: Welcome to nginx!
 
-# Удаление теста
+# Очистка
 kubectl delete namespace test
 ```
+
+---
 
 ---
 
