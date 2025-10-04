@@ -288,6 +288,7 @@ ns1     IN      A       192.168.100.53
 ; Инфраструктурные VM
 dns-server      IN      A       192.168.100.53
 cf-tunnel       IN      A       192.168.100.50
+ngrok-tunnel    IN      A       192.168.100.60
 jumphost        IN      A       192.168.100.5
 
 ; Kubernetes кластер
@@ -336,6 +337,7 @@ sudo bash -c 'cat > /etc/bind/zones/db.192.168.100 <<EOF
 12      IN      PTR     k3s-worker-2.local.lab.
 20      IN      PTR     minio.local.lab.
 50      IN      PTR     cf-tunnel.local.lab.
+60      IN      PTR     ngrok-tunnel.local.lab.
 53      IN      PTR     dns-server.local.lab.
 53      IN      PTR     ns1.local.lab.
 101     IN      PTR     jenkins.local.lab.
@@ -358,6 +360,7 @@ sudo bash -c 'cat > /etc/bind/zones/db.10.0.10 <<EOF
 
 ; PTR записи
 50      IN      PTR     cf-tunnel.local.lab.
+50      IN      PTR     ngrok-tunnel.local.lab.
 53      IN      PTR     dns-server.local.lab.
 102     IN      PTR     jumphost.local.lab.
 EOF'
