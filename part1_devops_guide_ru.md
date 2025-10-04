@@ -987,6 +987,13 @@ spec:
               number: 80
 EOF
 
+# Добавление DNS записи
+ssh admin@dns-server.local.lab
+sudo bash -c 'echo "test           IN      A       192.168.100.10" >> /etc/bind/zones/db.local.lab'
+sudo sed -i 's/Serial.*$/Serial: 3/' /etc/bind/zones/db.local.lab
+sudo rndc reload local.lab
+exit
+
 # Тест доступа (порт не нужен!)
 curl http://test.local.lab
 # Ожидается: Welcome to nginx!
