@@ -431,14 +431,14 @@ ping -c 2 google.com
 
 ## Интернет-шлюз
 
-### Настройка NAT на cf-tunnel
+### Настройка NAT на ngrok-tunnel
 
-VM `cf-tunnel` будет служить NAT-шлюзом для всех машин во внутренней сети 192.168.100.0/24.
+VM `на ngrok-tunnel` будет служить NAT-шлюзом для всех машин во внутренней сети 192.168.100.0/24.
 
-SSH в cf-tunnel:
+SSH в ngrok-tunnel:
 
 ```bash
-ssh admin@10.0.10.50
+ssh admin@10.0.10.60
 ```
 
 #### Включение IP forwarding
@@ -503,7 +503,7 @@ network:
   ethernets:
     eth0:
       dhcp4: no
-      addresses: [10.0.10.50/24]
+      addresses: [10.0.10.60/24]
       routes:
         - to: 0.0.0.0/0
           via: 10.0.10.1  # ISP gateway
@@ -512,7 +512,7 @@ network:
         search: [local.lab]
     eth1:
       dhcp4: no
-      addresses: [192.168.100.50/24]
+      addresses: [192.168.100.60/24]
       nameservers:
         addresses: [192.168.100.53]
         search: [local.lab]
@@ -601,7 +601,7 @@ CURRENT_IP=$(ip -4 addr show eth0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
 
 # Определение gateway
 if [[ $CURRENT_IP == 192.168.100.* ]]; then
-    GATEWAY="192.168.100.50"  # cf-tunnel как gateway
+    GATEWAY="192.168.100.60"  # ngrok-tunnel как gateway
     NETMASK="24"
 elif [[ $CURRENT_IP == 10.0.10.* ]]; then
     GATEWAY="10.0.10.1"
