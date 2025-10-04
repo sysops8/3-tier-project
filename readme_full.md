@@ -485,7 +485,7 @@ sudo systemctl enable netfilter-persistent
 sudo systemctl status netfilter-persistent
 ```
 
-#### Настройка сети на cf-tunnel
+#### Настройка сети на ngrok-tunnel
 
 ```bash
 # Проверка текущих интерфейсов
