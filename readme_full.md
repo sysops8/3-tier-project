@@ -1497,41 +1497,49 @@ ngrok config add-authtoken YOUR_AUTHTOKEN
 
 # Создать конфигурацию для множественных сервисов
 cat > ~/.config/ngrok/ngrok.yml <<EOF
-version: "2"
-authtoken: YOUR_AUTHTOKEN
+version: 3
 
-tunnels:
-  ezyshop-web:
-    proto: http
-    addr: 192.168.100.100:80    
-    inspect: false
-    host_header: rewrite
+agent:
+  authtoken: YOUR_AUTHTOKEN
+  region: us
+  log_level: info
+  log_format: json
+  log: /var/log/ngrok.log
 
-  ezyshop-services:
-    proto: http
-    addr: 192.168.100.100:80    
-    inspect: false
-    host_header: rewrite
-    
-region: us
-log_level: info
-log_format: json
-log: /var/log/ngrok.log
+endpoints:
+  - name: ezyshop-web
+    url: http://
+    upstream:
+      url: http://192.168.100.100:80
+
+  - name: ezyshop-services
+    url: http://
+    upstream:
+      url: http://192.168.100.100:80
 EOF
 
 # Создать systemd service
 sudo tee /etc/systemd/system/ngrok.service > /dev/null <<EOF
 [Unit]
 Description=ngrok tunnel
-After=network.target
+After=network-online.target
+Wants=network-online.target
 
 [Service]
 Type=simple
 User=admin
+Group=admin
 WorkingDirectory=/home/admin
-ExecStart=/usr/local/bin/ngrok start --all --config ~/.config/ngrok/ngrok.yml
-Restart=always
-RestartSec=10
+
+# Перед запуском — создаём каталог и лог-файл с нужными правами
+ExecStartPre=/bin/mkdir -p /home/admin/.config/ngrok
+ExecStartPre=/bin/mkdir -p /var/log
+ExecStartPre=/bin/touch /var/log/ngrok.log
+ExecStartPre=/bin/chown admin:admin /var/log/ngrok.log
+
+ExecStart=/usr/local/bin/ngrok start --all --config /home/admin/.config/ngrok/ngrok.yml
+Restart=on-failure
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
