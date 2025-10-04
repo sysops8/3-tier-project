@@ -1501,7 +1501,6 @@ version: 3
 
 agent:
   authtoken: YOUR_AUTHTOKEN
-  region: us
   log_level: info
   log_format: json
   log: /var/log/ngrok.log
