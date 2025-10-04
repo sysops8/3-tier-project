@@ -1441,145 +1441,285 @@ kubectl delete namespace test
 
 ## Внешний доступ
 
-### Установка Cloudflare Tunnel
 
-SSH в cf-tunnel:
+### 🆕 ШАГ 8: Настройка ngrok туннеля (вместо Cloudflare)
+
+#### A. Создание VM для ngrok
+
+В Proxmox:
 
 ```bash
-ssh admin@cf-tunnel.local.lab
+# Создать VM
+qm create 106 \
+  --name ngrok-tunnel \
+  --memory 1024 \
+  --cores 1 \
+  --net0 virtio,bridge=vmbr0 \
+  --net1 virtio,bridge=vmbr1 \
+  --ide2 local:iso/ubuntu-22.04-server-amd64.iso,media=cdrom \
+  --scsi0 local-lvm:10
+
+# Запустить установку
+qm start 106
 ```
 
-#### Установка cloudflared
+**Настройка сети во время установки Ubuntu:**
+- ens18 (vmbr0): 10.0.10.60/24, gateway 10.0.10.1
+- ens19 (vmbr1): 192.168.100.60/24, no gateway
+
+#### B. Установка ngrok
+
+SSH к ngrok-tunnel:
 
 ```bash
-# Добавление репозитория Cloudflare
-curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg | sudo tee /usr/share/keyrings/cloudflare-main.gpg >/dev/null
-echo "deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/cloudflared.list
+ssh admin@10.0.10.60
 
-sudo apt update
-sudo apt install -y cloudflared
+# Обновить систему
+sudo apt update && sudo apt upgrade -y
+
+# Установить ngrok
+curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | \
+  sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null && \
+  echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | \
+  sudo tee /etc/apt/sources.list.d/ngrok.list && \
+  sudo apt update && \
+  sudo apt install ngrok
 
 # Проверка
-cloudflared --version
+ngrok version
 ```
 
-#### Аутентификация в Cloudflare
+#### C. Настройка ngrok
 
 ```bash
-# Запуск аутентификации
-cloudflared tunnel login
+# Авторизация (замените YOUR_AUTHTOKEN на ваш токен из https://dashboard.ngrok.com)
+ngrok config add-authtoken YOUR_AUTHTOKEN
 
-# Откроется браузер для авторизации
-# Выберите ваш домен в Cloudflare
+# Создать конфигурацию для множественных сервисов
+cat > ~/.config/ngrok/ngrok.yml <<EOF
+version: "2"
+authtoken: YOUR_AUTHTOKEN
+
+tunnels:
+  ezyshop-web:
+    proto: http
+    addr: 192.168.100.100:80    
+    inspect: false
+    host_header: rewrite
+
+  ezyshop-services:
+    proto: http
+    addr: 192.168.100.100:80    
+    inspect: false
+    host_header: rewrite
+    
+region: us
+log_level: info
+log_format: json
+log: /var/log/ngrok.log
+EOF
+
+# Создать systemd service
+sudo tee /etc/systemd/system/ngrok.service > /dev/null <<EOF
+[Unit]
+Description=ngrok tunnel
+After=network.target
+
+[Service]
+Type=simple
+User=admin
+WorkingDirectory=/home/admin
+ExecStart=/usr/local/bin/ngrok start --all --config ~/.config/ngrok/ngrok.yml
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Создать файл
+sudo touch /var/log/ngrok.log
+sudo chown -R admin:admin /var/log/ngrok.log
+
+# Запустить ngrok
+sudo systemctl daemon-reload
+sudo systemctl enable ngrok
+sudo systemctl start ngrok
+
+# Проверка статуса
+sudo systemctl status ngrok
+
+# Посмотреть активные туннели
+curl http://localhost:4040/api/tunnels | jq
 ```
 
-#### Создание туннеля
+#### D. Получение ngrok URL
 
 ```bash
-# Создание туннеля
-cloudflared tunnel create homelab-tunnel
+# Получить публичный URL
+NGROK_URL=$(curl -s http://localhost:4040/api/tunnels | jq -r '.tunnels[0].public_url')
+echo "Ваш ngrok URL: $NGROK_URL"
 
-# Сохраните Tunnel ID
-TUNNEL_ID=$(cloudflared tunnel list | grep homelab-tunnel | awk '{print $1}')
-echo "Tunnel ID: $TUNNEL_ID"
-
-# Список туннелей
-cloudflared tunnel list
+# Сохранить в файл для использования
+echo $NGROK_URL > /tmp/ngrok-url.txt
 ```
 
-#### Конфигурация туннеля
+**Важно**: Сохраните этот URL! Например: `https://abc123.ngrok.io`
+
+#### E. Настройка NAT для внутреннего доступа
+
+На ngrok-tunnel VM:
 
 ```bash
-# Создание директории для конфигурации
-sudo mkdir -p /etc/cloudflared
+# Включить IP forwarding
+sudo sysctl -w net.ipv4.ip_forward=1
+echo "net.ipv4.ip_forward=1" | sudo tee -a /etc/sysctl.conf
 
-# Создание конфигурации
-sudo bash -c "cat > /etc/cloudflared/config.yml <<EOF
-tunnel: $TUNNEL_ID
-credentials-file: /root/.cloudflared/${TUNNEL_ID}.json
+# Настроить iptables
+sudo iptables -t nat -A POSTROUTING -o ens18 -j MASQUERADE
+sudo iptables -A FORWARD -i ens19 -o ens18 -j ACCEPT
+sudo iptables -A FORWARD -i ens18 -o ens19 -m state --state RELATED,ESTABLISHED -j ACCEPT
 
-ingress:
-  - hostname: ezyshop.yourdomain.com
-    service: http://k3s-master.local.lab:30080
-    originRequest:
-      noTLSVerify: true
-  
-  - hostname: argocd.yourdomain.com
-    service: http://k3s-master.local.lab:30080
-    originRequest:
-      noTLSVerify: true
-  
-  - hostname: grafana.yourdomain.com
-    service: http://k3s-master.local.lab:30080
-    originRequest:
-      noTLSVerify: true
-  
-  - hostname: prometheus.yourdomain.com
-    service: http://k3s-master.local.lab:30080
-    originRequest:
-      noTLSVerify: true
-  
-  - hostname: kibana.yourdomain.com
-    service: http://k3s-master.local.lab:30080
-    originRequest:
-      noTLSVerify: true
-  
-  - hostname: jenkins.yourdomain.com
-    service: http://jenkins.local.lab:8080
-  
-  # Catch-all правило (обязательно последним)
-  - service: http_status:404
-EOF"
-
-# Копирование credentials
-sudo cp ~/.cloudflared/${TUNNEL_ID}.json /etc/cloudflared/
+# Сохранить правила
+sudo apt install iptables-persistent -y
+sudo netfilter-persistent save
 ```
 
-#### Настройка DNS в Cloudflare
+---
+
+### 🆕 ШАГ 9: Обновление DNS для ngrok
+
+#### A. Обновить BIND9 зоны
+
+SSH к dns-server:
 
 ```bash
-# Создание DNS записей через CLI
-# Замените yourdomain.com на ваш домен
+ssh admin@192.168.100.53
 
-cloudflared tunnel route dns homelab-tunnel ezyshop.yourdomain.com
-cloudflared tunnel route dns homelab-tunnel argocd.yourdomain.com
-cloudflared tunnel route dns homelab-tunnel grafana.yourdomain.com
-cloudflared tunnel route dns homelab-tunnel prometheus.yourdomain.com
-cloudflared tunnel route dns homelab-tunnel kibana.yourdomain.com
-cloudflared tunnel route dns homelab-tunnel jenkins.yourdomain.com
+# Создать зону для внешнего доступа (опционально, для внутренних записей)
+sudo tee -a /etc/bind/db.local.lab <<EOF
 
-# Или вручную в Cloudflare Dashboard:
-# DNS > Add Record > Type: CNAME
-# Name: ezyshop, Target: <TUNNEL_ID>.cfargotunnel.com
-```
+; ngrok tunnel endpoint
+ngrok           IN      A       192.168.100.60
+EOF
 
-#### Запуск туннеля как службы
-
-```bash
-# Установка как systemd service
-sudo cloudflared service install
-
-# Запуск
-sudo systemctl start cloudflared
-sudo systemctl enable cloudflared
+# Перезагрузить BIND9
+sudo systemctl reload bind9
 
 # Проверка
-sudo systemctl status cloudflared
-sudo journalctl -u cloudflared -f
+dig @192.168.100.53 ngrok.local.lab +short
 ```
 
-#### Проверка туннеля
+#### B. Документация URL
+
+Создайте файл с URL для команды:
 
 ```bash
-# Список активных туннелей
-cloudflared tunnel list
+# На jumphost
+cat > ~/ngrok-endpoints.txt <<EOF
+=== ngrok Public Endpoints ===
 
-# Информация о туннеле
-cloudflared tunnel info homelab-tunnel
+Main Application:
+- EzyShop: ${NGROK_URL}
 
-# Тестирование из внешней сети
-# curl https://ezyshop.yourdomain.com
+Admin Interfaces (через Traefik path-based routing):
+- ArgoCD: ${NGROK_URL}/argocd
+- Grafana: ${NGROK_URL}/grafana
+- Prometheus: ${NGROK_URL}/prometheus
+- Kibana: ${NGROK_URL}/kibana
+
+Internal Access (через local.lab):
+- Jenkins: http://jenkins.local.lab:8080
+- MinIO: http://minio.local.lab:9001
+- Vault: http://vault.local.lab:8200
+- Longhorn: http://longhorn.local.lab
+
+Note: ngrok URL динамический и меняется при перезапуске (бесплатный план)
+Для статического URL используйте ngrok paid план.
+EOF
+
+cat ~/ngrok-endpoints.txt
 ```
+
+---
+
+### 🆕 ШАГ 10: Обновление Traefik для ngrok
+
+Обновите Traefik Ingress для работы с ngrok path-based routing:
+
+```bash
+# На jumphost
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: traefik-config
+  namespace: traefik
+data:
+  traefik.yml: |
+    entryPoints:
+      web:
+        address: ":80"
+        http:
+          redirections:
+            entryPoint:
+              to: websecure
+              scheme: https
+      websecure:
+        address: ":443"
+        http:
+          tls: {}
+    
+    providers:
+      kubernetesIngress:
+        ingressClass: traefik
+    
+    api:
+      dashboard: true
+      insecure: true
+    
+    log:
+      level: INFO
+    
+    accessLog: {}
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: strip-prefix
+  namespace: traefik
+spec:
+  stripPrefix:
+    prefixes:
+      - /argocd
+      - /grafana
+      - /prometheus
+      - /kibana
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: dashboard
+  namespace: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: PathPrefix(`/traefik`)
+      kind: Rule
+      services:
+        - name: api@internal
+          kind: TraefikService
+      middlewares:
+        - name: strip-prefix
+EOF
+
+# Перезапустить Traefik
+kubectl -n traefik rollout restart deployment traefik
+```
+
+---
+
 
 ---
 
