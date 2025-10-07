@@ -1732,7 +1732,7 @@ kubectl -n traefik rollout restart deployment traefik
 
 ## CI/CD (Jenkins)
 
-### Установка Jenkins
+### Установка Jenkins (нужно следовать инструкции с видео)
 
 SSH в jenkins:
 
