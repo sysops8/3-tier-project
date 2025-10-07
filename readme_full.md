@@ -1746,10 +1746,13 @@ ssh admin@jenkins.local.lab
 sudo apt update
 sudo apt install -y fontconfig openjdk-17-jre
 java -version
+```
+#### Установка Trivy
+
+```bash
 curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sudo sh -s -- -b /usr/local/bin
 sudo trivy --version
 ```
-
 #### Установка Jenkins
 
 ```bash
