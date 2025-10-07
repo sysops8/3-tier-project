@@ -1863,6 +1863,10 @@ Manage Jenkins → Credentials → System → Global credentials:
    - ID: `github-credentials`
 
 ---
+Проверка с машины Jenkins доступа в github репозиторий:
+```bash
+curl -u sysops8:<токен> https://api.github.com/user
+```
 
 ## Мониторинг (Prometheus Stack)
 
