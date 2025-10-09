@@ -1535,6 +1535,13 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 **Доступ**: `http://argocd.local.lab`  
 **Учетные данные**: admin / <пароль>
 
+Если не открывается ArgoCD, то нужно отредактировать манифест:
+
+kubectl -n argocd edit deployment argocd-server
+
+Найти контейнер argocd-server → в args: добавить:
+
+- --insecure
 ---
 
 ### 14. Развертывание приложения
