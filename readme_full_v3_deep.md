@@ -1062,7 +1062,7 @@ tunnels:
     proto: http
     addr: 192.168.100.100:80
     host_header: rewrite
-    bind_tls: true
+#    bind_tls: true
 
 region: us
 log_level: info
