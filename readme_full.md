@@ -44,7 +44,7 @@
 ```
 Internet (Серый IP)
     ↓
-Cloudflare Tunnel (cf-tunnel VM)
+Ngrok Tunnel (Ngrok-tunnel VM)
     ↓ [NAT Gateway]
     ↓
 Traefik Ingress Controller (K3s)
@@ -78,7 +78,7 @@ Infrastructure Services:
 | Hostname | vCPU | RAM | Disk | IP | Роль |
 |----------|------|-----|------|-----|------|
 | dns-server | 1 | 1GB | 10GB | 10.0.10.53<br>192.168.100.53 | DNS Server (BIND9) |
-| cf-tunnel | 1 | 1GB | 10GB | 10.0.10.50<br>192.168.100.50 | NAT Gateway + Tunnel |
+| ngrok-tunnel | 1 | 1GB | 10GB | 10.0.10.60<br>192.168.100.60 | NAT Gateway + Tunnel |
 | k3s-master | 4 | 8GB | 60GB | 192.168.100.10 | K3s Control Plane |
 | k3s-worker-1 | 4 | 10GB | 80GB | 192.168.100.11 | K3s Worker Node |
 | k3s-worker-2 | 4 | 10GB | 80GB | 192.168.100.12 | K3s Worker Node |
@@ -146,7 +146,7 @@ ip addr show vmbr1  # Проверка
 ```
 10.0.10.0/24 (vmbr0) - Внешняя сеть
 ├── 10.0.10.1        - Gateway (роутер ISP)
-├── 10.0.10.50       - cf-tunnel (eth0)
+├── 10.0.10.60       - ngrok-tunnel (eth0)
 ├── 10.0.10.53       - dns-server (eth0)
 ├── 10.0.10.102      - jumphost (eth0)
 └── 10.0.10.200      - Proxmox host
@@ -158,7 +158,7 @@ ip addr show vmbr1  # Проверка
 ├── 192.168.100.11   - k3s-worker-1
 ├── 192.168.100.12   - k3s-worker-2
 ├── 192.168.100.20   - minio
-├── 192.168.100.50   - cf-tunnel (eth1) [NAT Gateway]
+├── 192.168.100.60   - ngrok-tunnel (eth1) [NAT Gateway]
 ├── 192.168.100.53   - dns-server (eth1)
 └── 192.168.100.101  - jenkins
 ```
@@ -3131,7 +3131,7 @@ kubectl delete pod test-high-cpu
                          │
               ┌──────────┴──────────┐
               │   NAT Gateway       │
-              │   (cf-tunnel VM)    │
+              │   (ngrok-tunnel VM)    │
               └──────────┬──────────┘
                          │
         ┌────────────────┴────────────────┐
