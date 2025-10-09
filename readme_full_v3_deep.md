@@ -965,6 +965,7 @@ additionalArguments:
   - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
 EOF
 ```
+ПРИМЕЧАНИЕ: Чтобы открывались Grafana, Prometeus и Alert Manager нужно закоменттиь строчки из **additionalArguments**
 
 #### Установка Traefik
 
