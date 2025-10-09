@@ -1138,7 +1138,7 @@ sudo sysctl -p
 
 ---
 
-### 10. CI/CD (Jenkins)
+### 10. CI/CD (Jenkins) НАСТРОЙКА ПО ВИДЕО
 
 #### Установка Jenkins
 
