@@ -1089,6 +1089,8 @@ RestartSec=10
 WantedBy=multi-user.target
 EOF
 
+ПРИЧЕЧАНИЕ СТРОКА ЗАПУСКА - ngrok http 192.168.100.100 --host-header="easyshop.local.lab"
+
 # Создать файл логов
 sudo touch /var/log/ngrok.log
 sudo chown admin:admin /var/log/ngrok.log
