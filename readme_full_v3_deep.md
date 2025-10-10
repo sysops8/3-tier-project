@@ -1143,7 +1143,7 @@ sudo sysctl -p
 ### 10. CI/CD (Jenkins)
 
 #### Установка Jenkins (НАСТРОЙКА ПО ВИДЕО - установка плагинов и создание пайплайна)
-
+или по файлу https://github.com/sysops8/3-tier-project/blob/main/proxmox_easyshop_guide.md
 SSH к jenkins:
 
 ```bash
