@@ -1197,7 +1197,6 @@ torsocks helm repo update
 torsocks helm pull metallb/metallb
 ```
 
-
 или экспортировать прокси переменные (для некоторых инструментов):
 ```bash
 export HTTPS_PROXY="socks5://127.0.0.1:9050"
@@ -1206,8 +1205,15 @@ export HTTP_PROXY=$HTTPS_PROXY
 helm repo add metallb https://metallb.github.io/metallb
 helm repo update
 ```
-
-
+или деликатный вариант
+```bash
+alias helmtor='HTTPS_PROXY=socks5://127.0.0.1:9050 helm'
+```
+И потом:
+```bash
+helmtor repo add metallb https://metallb.github.io/metallb
+helmtor repo update
+```
 👉 socks5h важно — оно гарантирует, что DNS тоже пойдёт через Tor, а не локально.
 
 ---
