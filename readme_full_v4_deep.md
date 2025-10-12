@@ -2048,7 +2048,7 @@ nano argocd-values.yaml
 
 ```yaml
 global:
-  domain: argocd.local.dev
+  domain: argocd.local.lab
 
 configs:
   params:
@@ -2062,7 +2062,7 @@ server:
       nginx.ingress.kubernetes.io/ssl-redirect: "false"
       nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
     hosts:
-      - argocd.local.dev
+      - argocd.local.lab
     paths:
       - /
     pathType: Prefix
@@ -2087,7 +2087,7 @@ echo  # Новая строка
 
 ### 2. Доступ к ArgoCD UI
 
-Откройте браузер: `http://argocd.local.dev`
+Откройте браузер: `http://argocd.local.lab`
 
 - **Username**: admin
 - **Password**: (пароль из предыдущего шага)
