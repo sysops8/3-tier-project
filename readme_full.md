@@ -1189,7 +1189,7 @@ tcp  0  0 127.0.0.1:9050  0.0.0.0:*  LISTEN  tor
 ```
 ⚡ Использование Tor для Helm
 
-Ты можешь использовать torsocks как обёртку:
+Можно использовать torsocks как обёртку:
 ```bash
 torsocks helm repo add metallb https://metallb.github.io/metallb
 torsocks helm repo update
