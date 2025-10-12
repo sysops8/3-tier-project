@@ -1232,8 +1232,8 @@ MetalLB предоставляет тип сервиса LoadBalancer для bar
 
 ```bash
 # Добавить Helm репозиторий
-helm repo add metallb https://metallb.github.io/metallb
-helm repo update
+torsocks helm repo add metallb https://metallb.github.io/metallb
+torsocks helm repo update
 
 # Создать namespace
 kubectl create namespace metallb-system
