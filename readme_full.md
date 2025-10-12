@@ -1163,7 +1163,30 @@ kubectl -n longhorn-system get ingress
 Доступ к UI (после установки Traefik): `http://longhorn.local.lab`
 
 ---
+Установка Tor на Ubuntu / Debian
+sudo apt update
+sudo apt install tor torsocks -y
 
+
+📝 tor — сам сервис Tor,
+torsocks — обёртка, которая перенаправляет трафик через Tor.
+
+▶️ Запуск Tor
+sudo systemctl enable tor
+sudo systemctl start tor
+sudo systemctl status tor
+
+
+Проверить, что слушает порт:
+
+netstat -tlnp | grep 9050
+
+
+Обычно:
+
+tcp  0  0 127.0.0.1:9050  0.0.0.0:*  LISTEN  tor
+
+---
 ### 7. LoadBalancer (MetalLB)
 
 MetalLB предоставляет тип сервиса LoadBalancer для bare-metal Kubernetes кластеров, устраняя необходимость в NodePort сервисах.
