@@ -1163,28 +1163,51 @@ kubectl -n longhorn-system get ingress
 Доступ к UI (после установки Traefik): `http://longhorn.local.lab`
 
 ---
-Установка Tor на Ubuntu / Debian
+### Установка Tor на Ubuntu / Debian
+```bash
 sudo apt update
 sudo apt install tor torsocks -y
+```
 
-
-📝 tor — сам сервис Tor,
-torsocks — обёртка, которая перенаправляет трафик через Tor.
+📝 tor — сам сервис Tor, torsocks — обёртка, которая перенаправляет трафик через Tor.
 
 ▶️ Запуск Tor
+
+```bash
 sudo systemctl enable tor
 sudo systemctl start tor
 sudo systemctl status tor
-
-
+```
 Проверить, что слушает порт:
 
+```bash
 netstat -tlnp | grep 9050
-
-
+```
 Обычно:
-
+```
 tcp  0  0 127.0.0.1:9050  0.0.0.0:*  LISTEN  tor
+```
+⚡ Использование Tor для Helm
+
+Ты можешь использовать torsocks как обёртку:
+```bash
+torsocks helm repo add metallb https://metallb.github.io/metallb
+torsocks helm repo update
+torsocks helm pull metallb/metallb
+```
+
+
+или экспортировать прокси переменные (для некоторых инструментов):
+```bash
+export HTTPS_PROXY="socks5h://127.0.0.1:9050"
+export HTTP_PROXY=$HTTPS_PROXY
+
+helm repo add metallb https://metallb.github.io/metallb
+helm repo update
+```
+
+
+👉 socks5h важно — оно гарантирует, что DNS тоже пойдёт через Tor, а не локально.
 
 ---
 ### 7. LoadBalancer (MetalLB)
