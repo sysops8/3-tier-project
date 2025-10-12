@@ -1347,8 +1347,8 @@ EOF
 #### Установка Traefik
 
 ```bash
-helm repo add traefik https://traefik.github.io/charts
-helm repo update
+torsocks helm repo add traefik https://traefik.github.io/charts
+torsocks helm repo update
 
 kubectl create namespace traefik
 
