@@ -1200,7 +1200,7 @@ torsocks helm pull metallb/metallb
 
 или экспортировать прокси переменные (для некоторых инструментов):
 ```bash
-export HTTPS_PROXY="socks5h://127.0.0.1:9050"
+export HTTPS_PROXY="socks5://127.0.0.1:9050"
 export HTTP_PROXY=$HTTPS_PROXY
 
 helm repo add metallb https://metallb.github.io/metallb
