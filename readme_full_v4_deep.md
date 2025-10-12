@@ -1698,6 +1698,65 @@ sudo chmod 600 /var/lib/jenkins/.kube/config
 sudo -u jenkins kubectl get nodes
 ```
 
+### 2. Настройка Jenkins через Web UI
+
+Откройте в браузере: `http://jenkins.local.dev:8080`
+
+1. Введите начальный пароль
+2. Установите рекомендуемые плагины
+3. Создайте admin пользователя
+
+### 3. Установка дополнительных плагинов
+
+Перейдите: **Manage Jenkins → Plugins → Available Plugins**
+
+Установите:
+- Docker Pipeline
+- Kubernetes
+- Kubernetes CLI
+- Git Parameter
+- Pipeline: Stage View
+- Blue Ocean
+
+### 4. Настройка credentials
+
+**Manage Jenkins → Credentials → (global) → Add Credentials**
+
+#### GitHub credentials:
+- **Kind**: Username with password
+- **ID**: `github-credentials`
+- **Username**: ваш GitHub username
+- **Password**: Personal Access Token (создайте на GitHub)
+
+#### DockerHub credentials:
+- **Kind**: Username with password
+- **ID**: `docker-hub-credentials`
+- **Username**: ваш DockerHub username
+- **Password**: ваш DockerHub password
+
+#### Kubeconfig:
+```bash
+# На jumphost скопируйте kubeconfig с master ноды
+scp ubuntu@192.168.100.10:~/.kube/config ./k3s-kubeconfig
+```
+
+В Jenkins:
+- **Kind**: Secret file
+- **ID**: `kubeconfig`
+- **File**: загрузите k3s-kubeconfig
+
+### 5. Настройка Jenkins Shared Library
+
+**Manage Jenkins → System → Global Pipeline Libraries**
+
+- **Name**: `Shared`
+- **Default version**: `main`
+- **Retrieval method**: Modern SCM
+- **Source Code Management**: Git
+- **Project Repository**: форкните и используйте свой репозиторий
+
+---
+
 ---
 
 ### 11. Мониторинг (Prometheus Stack)
