@@ -2022,6 +2022,174 @@ helm install filebeat elastic/filebeat \
 
 ### 13. GitOps (ArgoCD)
 
+## 🚀 Развертывание ArgoCD
+
+### 1. Установка ArgoCD
+
+```bash
+# На master ноде через jumphost
+ssh ubuntu@192.168.100.10
+
+# Создание namespace
+kubectl create namespace argocd
+
+# Установка ArgoCD через Helm
+helm repo add argo https://argoproj.github.io/argo-helm
+helm repo update
+
+# Получение values файла
+helm show values argo/argo-cd > argocd-values.yaml
+
+# Редактирование values
+nano argocd-values.yaml
+```
+
+Измените следующие параметры в `argocd-values.yaml`:
+
+```yaml
+global:
+  domain: argocd.local.dev
+
+configs:
+  params:
+    server.insecure: true  # Для работы за Nginx Ingress
+
+server:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    hosts:
+      - argocd.local.dev
+    paths:
+      - /
+    pathType: Prefix
+```
+
+```bash
+# Установка ArgoCD
+helm install argocd argo/argo-cd \
+  --namespace argocd \
+  --values argocd-values.yaml
+
+# Ожидание готовности подов
+kubectl wait --for=condition=ready pod \
+  --all -n argocd \
+  --timeout=300s
+
+# Получение начального пароля
+kubectl -n argocd get secret argocd-initial-admin-secret \
+  -o jsonpath="{.data.password}" | base64 -d
+echo  # Новая строка
+```
+
+### 2. Доступ к ArgoCD UI
+
+Откройте браузер: `http://argocd.local.dev`
+
+- **Username**: admin
+- **Password**: (пароль из предыдущего шага)
+
+После входа смените пароль:
+- User Info → Update Password
+
+### 3. Настройка ArgoCD CLI (опционально)
+
+```bash
+# Установка ArgoCD CLI
+curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+sudo install -m 555 argocd-linux-amd64 /usr/local/bin/argocd
+rm argocd-linux-amd64
+
+# Логин через CLI
+argocd login argocd.local.dev \
+  --username admin \
+  --password YOUR_PASSWORD \
+  --insecure
+
+# Изменение пароля через CLI
+argocd account update-password
+```
+
+### 4. Создание Application в ArgoCD
+
+#### Через UI:
+
+1. Нажмите **+ NEW APP**
+2. Заполните параметры:
+   - **Application Name**: easyshop
+   - **Project**: default
+   - **Sync Policy**: Automatic
+   - **Self Heal**: ✓ (enabled)
+   - **Prune Resources**: ✓ (enabled)
+   
+3. **Source**:
+   - **Repository URL**: `https://github.com/YOUR_USERNAME/tws-e-commerce-app`
+   - **Revision**: master
+   - **Path**: kubernetes
+
+4. **Destination**:
+   - **Cluster URL**: https://kubernetes.default.svc
+   - **Namespace**: easyshop
+
+5. Нажмите **CREATE**
+
+#### Через манифест:
+
+```yaml
+# argocd-application.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: easyshop
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/YOUR_USERNAME/tws-e-commerce-app
+    targetRevision: master
+    path: kubernetes
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: easyshop
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+    - CreateNamespace=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+```
+
+```bash
+kubectl apply -f argocd-application.yaml
+```
+
+### 5. Проверка синхронизации
+
+```bash
+# Статус приложения
+argocd app get easyshop
+
+# Список всех приложений
+argocd app list
+
+# Логи синхронизации
+argocd app logs easyshop
+
+# Принудительная синхронизация
+argocd app sync easyshop
+```
+
+---
 #### Установка ArgoCD
 
 ```bash
