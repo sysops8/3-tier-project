@@ -1163,7 +1163,8 @@ kubectl -n longhorn-system get ingress
 Доступ к UI (после установки Traefik): `http://longhorn.local.lab`
 
 ---
-### Установка Tor на Ubuntu / Debian
+### Установка Tor на Ubuntu / Debian на jumphost
+
 ```bash
 sudo apt update
 sudo apt install tor torsocks -y
