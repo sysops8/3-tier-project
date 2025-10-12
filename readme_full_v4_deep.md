@@ -1201,6 +1201,7 @@ torsocks helm pull metallb/metallb
 ```bash
 export HTTPS_PROXY="socks5://127.0.0.1:9050"
 export HTTP_PROXY=$HTTPS_PROXY
+export NO_PROXY="127.0.0.1,localhost,k3s-master.local.lab,10.0.0.0/8,192.168.0.0/16" #Добавление локальной сети в исключение
 
 helm repo add metallb https://metallb.github.io/metallb
 helm repo update
