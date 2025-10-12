@@ -17,7 +17,7 @@
 11. [Мониторинг (Prometheus Stack)](#мониторинг-prometheus-stack)
 12. [Логирование (ELK Stack)](#логирование-elk-stack)
 13. [GitOps (ArgoCD)](#gitops-argocd)
-14. [Развертывание приложения EzyShop](#развертывание-приложения)
+14. [Развертывание приложения EasyShop](#развертывание-приложения)
 15. [Заключение](#заключение)
 
 ---
@@ -57,7 +57,7 @@ Traefik Ingress Controller (K3s)
 │  └──────────┴──────────┴──────────┘        │
 │                                             │
 │  Applications:                              │
-│  - EzyShop (E-commerce)                    │
+│  - EasyShop (E-commerce)                    │
 │  - ArgoCD (GitOps deployment)              │
 │  - Prometheus/Grafana (Metrics)            │
 │  - Elasticsearch/Kibana (Logs)             │
@@ -92,7 +92,7 @@ Infrastructure Services:
 
 | Сервис | Внутренний домен | Внешний домен | Порт |
 |--------|------------------|---------------|------|
-| EzyShop | ezyshop.local.lab | ezyshop.yourdomain.com | 80/443 |
+| EasyShop | easyshop.local.lab | easyshop.yourdomain.com | 80/443 |
 | ArgoCD | argocd.local.lab | argocd.yourdomain.com | 80/443 |
 | Grafana | grafana.local.lab | grafana.yourdomain.com | 80/443 |
 | Prometheus | prometheus.local.lab | prometheus.yourdomain.com | 80/443 |
@@ -301,7 +301,7 @@ jenkins         IN      A       192.168.100.101
 minio           IN      A       192.168.100.20
 
 ; Сервисные записи (Ingress)
-ezyshop         IN      A       192.168.100.10
+easyshop         IN      A       192.168.100.10
 argocd          IN      A       192.168.100.10
 grafana         IN      A       192.168.100.10
 prometheus      IN      A       192.168.100.10
@@ -310,7 +310,7 @@ kibana          IN      A       192.168.100.10
 longhorn        IN      A       192.168.100.10
 
 ; CNAME для удобства
-www.ezyshop     IN      CNAME   ezyshop.local.lab.
+www.easyshop     IN      CNAME   easyshop.local.lab.
 ci              IN      CNAME   jenkins.local.lab.
 s3              IN      CNAME   minio.local.lab.
 EOF'
@@ -395,7 +395,7 @@ sudo systemctl status bind9
 dig @192.168.100.53 k3s-master.local.lab +short
 # Ожидаем: 192.168.100.10
 
-dig @192.168.100.53 ezyshop.local.lab +short
+dig @192.168.100.53 easyshop.local.lab +short
 # Ожидаем: 192.168.100.10
 
 nslookup jenkins.local.lab 192.168.100.53
@@ -1406,7 +1406,7 @@ sudo rndc reload local.lab
 exit
 
 # Тест разрешения DNS
-dig @192.168.100.53 ezyshop.local.lab +short
+dig @192.168.100.53 easyshop.local.lab +short
 # Должен вернуть: 192.168.100.100
 ```
 
@@ -1527,7 +1527,7 @@ version: "2"
 authtoken: YOUR_AUTHTOKEN
 
 tunnels:
-  ezyshop:
+  easyshop:
     proto: http
     addr: 192.168.100.100:80
     host_header: rewrite
@@ -2252,27 +2252,27 @@ kubectl -n argocd edit deployment argocd-server
 #### Создание namespace и deployment
 
 ```bash
-kubectl create namespace ezyshop
+kubectl create namespace easyshop
 
 cat <<EOF | kubectl apply -f -
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ezyshop-frontend
-  namespace: ezyshop
+  name: easyshop-frontend
+  namespace: easyshop
   labels:
-    app: ezyshop
+    app: easyshop
     component: frontend
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: ezyshop
+      app: easyshop
       component: frontend
   template:
     metadata:
       labels:
-        app: ezyshop
+        app: easyshop
         component: frontend
     spec:
       containers:
@@ -2291,11 +2291,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: ezyshop-frontend
-  namespace: ezyshop
+  name: easyshop-frontend
+  namespace: easyshop
 spec:
   selector:
-    app: ezyshop
+    app: easyshop
     component: frontend
   ports:
   - port: 80
@@ -2305,20 +2305,20 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ezyshop-ingress
-  namespace: ezyshop
+  name: easyshop-ingress
+  namespace: easyshop
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
 spec:
   rules:
-  - host: ezyshop.local.lab
+  - host: easyshop.local.lab
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: ezyshop-frontend
+            name: easyshop-frontend
             port:
               number: 80
 EOF
@@ -2327,12 +2327,12 @@ EOF
 #### Проверка приложения
 
 ```bash
-kubectl -n ezyshop get pods
-kubectl -n ezyshop get svc
-kubectl -n ezyshop get ingress
+kubectl -n easyshop get pods
+kubectl -n easyshop get svc
+kubectl -n easyshop get ingress
 
 # Тест доступа внутри сети
-curl http://ezyshop.local.lab
+curl http://easyshop.local.lab
 
 # Тест через ngrok (замените YOUR_URL на ваш ngrok URL)
 NGROK_URL=$(ssh admin@ngrok-tunnel.local.lab 'curl -s http://localhost:4040/api/tunnels | jq -r ".tunnels[0].public_url"')
@@ -2379,7 +2379,7 @@ fi
 
 # 5. Проверка сервисов
 echo "5. Testing services..."
-SERVICES="prometheus.local.lab grafana.local.lab alertmanager.local.lab kibana.local.lab argocd.local.lab ezyshop.local.lab"
+SERVICES="prometheus.local.lab grafana.local.lab alertmanager.local.lab kibana.local.lab argocd.local.lab easyshop.local.lab"
 for service in $SERVICES; do
     if curl -s -o /dev/null -w "%{http_code}" http://$service | grep -q "200\|301\|302"; then
         echo "✅ $service accessible"
