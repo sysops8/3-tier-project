@@ -1982,28 +1982,37 @@ EOF
 
 ```bash
 cat > /tmp/filebeat-values.yaml <<EOF
+
 daemonset:
   enabled: true
 
 filebeatConfig:
   filebeat.yml: |
     filebeat.inputs:
-    - type: container
-      paths:
-        - /var/log/containers/*.log
-      processors:
-      - add_kubernetes_metadata:
-          host: ${NODE_NAME}
-          matchers:
-          - logs_path:
-              logs_path: "/var/log/containers/"
+      - type: container
+        paths:
+          - /var/log/containers/*.log
+        processors:
+          - add_kubernetes_metadata:
+              host: ${NODE_NAME}
+              matchers:
+                - logs_path:
+                    logs_path: "/var/log/containers/"
 
     output.elasticsearch:
-      hosts: ["http://elasticsearch-master.logging.svc.cluster.local:9200"]
+      hosts: ["https://elasticsearch-master.logging.svc.local.lab:9200"]
       username: "elastic"
-      password: "${ELASTIC_PASSWORD}"
+      password: "uV0xNnWwBawcIn0l"
+      ssl.verification_mode: none
       indices:
         - index: "filebeat-%{+yyyy.MM.dd}"
+
+env:
+  - name: ELASTIC_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: elasticsearch-master-credentials
+        key: password
 
 resources:
   requests:
@@ -2012,14 +2021,19 @@ resources:
   limits:
     cpu: 200m
     memory: 200Mi
+
 EOF
 
-ELASTIC_PASSWORD=`kubectl get secret elasticsearch-master-credentials -n logging   -o jsonpath='{.data.password}' | base64 -d`
+export ELASTIC_PASSWORD=`kubectl get secret elasticsearch-master-credentials -n logging   -o jsonpath='{.data.password}' | base64 -d; echo`
 
 helm install filebeat elastic/filebeat \
   --namespace logging \
   --values /tmp/filebeat-values.yaml
 ```
+Проверка:
+$ kubectl get pods -n logging | grep filebeat
+$ kubectl exec -it -n logging filebeat-filebeat-xxxx --   curl -u "elastic:$(kubectl get secret -n logging elasticsearch-master-credentials -o jsonpath='{.data.password}' | base64 -d)" -k   "https://elasticsearch-master.logging.svc.local.lab:9200/filebeat-*/_count"
+
 
 **Доступ**: `http://kibana.local.lab`
 
