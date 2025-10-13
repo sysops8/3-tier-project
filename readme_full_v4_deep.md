@@ -1492,7 +1492,7 @@ kubectl delete namespace test
 ---
 
 ### 9. Внешний доступ (ngrok Tunnel)
-
+#ingress-controller-traefik
 #### Установка ngrok
 
 SSH к ngrok-tunnel:
