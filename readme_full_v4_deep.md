@@ -1491,7 +1491,7 @@ kubectl delete namespace test
 
 ---
 
-### 9. Внешний доступ (ngrok Tunnel)
+## 9. Внешний доступ (ngrok Tunnel)
 
 #### Установка ngrok
 
