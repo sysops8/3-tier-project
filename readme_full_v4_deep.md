@@ -73,6 +73,25 @@ Infrastructure Services:
 - Jumphost (192.168.100.5)
 ```
 
+
+### Потоки трафика
+
+```mermaid
+graph TB
+    A[Admin] -->|SSH| B[Jumphost<br/>10.0.10.102]
+    B -->|SSH| C[Internal VMs<br/>192.168.100.x]
+    
+    C -->|Internet| D[Ngrok Gateway<br/>192.168.100.60]
+    D -->|NAT| E[Internet]
+    
+    F[External Users] -->|HTTPS| G[Ngrok/Cloudflare]
+    G -->|Tunnel| D
+    D -->|Forward| H[K8s Ingress<br/>192.168.100.100]
+    
+    C -->|DNS| I[BIND9<br/>192.168.100.53]
+    I -->|Upstream| J[8.8.8.8]
+```
+
 ### Спецификация виртуальных машин
 
 | Hostname | vCPU | RAM | Disk | IP | Роль |
