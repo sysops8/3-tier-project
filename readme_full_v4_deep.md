@@ -1781,6 +1781,7 @@ scp ubuntu@192.168.100.10:~/.kube/config ./k3s-kubeconfig
 ---
 
 ### 11. Мониторинг (Prometheus Stack)
+Prometheus Stack предназначен для мониторинга метрик (показателей системы и приложений), Prometheus фокусируется на метриках в реальном времени с использованием базы данных временных рядов.
 <img width="1364" height="758" alt="image" src="https://github.com/user-attachments/assets/08cc9b7d-5aeb-4bc6-b657-cadc9a6ece25" />
 
 #### Установка kube-prometheus-stack
@@ -1918,6 +1919,7 @@ EOF
 ---
 
 ### 12. Логирование (ELK Stack)
+Elastic Stack (ELK) — предназначен для сбора, хранения и анализа журналов (логов). ELK лучше подходит для поиска и анализа больших объемов текстовой информации из логов. 
 <img width="1024" height="478" alt="image" src="https://github.com/user-attachments/assets/c3dbca7d-fa9f-43bf-a0ab-26d4d1a385f5" />
 
 #### Установка Elasticsearch
