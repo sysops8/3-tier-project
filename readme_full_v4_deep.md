@@ -1917,6 +1917,7 @@ EOF
 ---
 
 ### 12. Логирование (ELK Stack)
+<img width="1024" height="478" alt="image" src="https://github.com/user-attachments/assets/c3dbca7d-fa9f-43bf-a0ab-26d4d1a385f5" />
 
 #### Установка Elasticsearch
 
