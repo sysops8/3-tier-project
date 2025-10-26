@@ -1781,6 +1781,7 @@ scp ubuntu@192.168.100.10:~/.kube/config ./k3s-kubeconfig
 ---
 
 ### 11. Мониторинг (Prometheus Stack)
+<img width="1364" height="758" alt="image" src="https://github.com/user-attachments/assets/08cc9b7d-5aeb-4bc6-b657-cadc9a6ece25" />
 
 #### Установка kube-prometheus-stack
 
