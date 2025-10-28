@@ -1577,8 +1577,8 @@ RestartSec=10
 WantedBy=multi-user.target
 EOF
 
-ПРИЧЕЧАНИЕ СТРОКА ЗАПУСКА - ngrok http 192.168.100.100 --host-header="easyshop.local.lab"
-Если страници после этого не открывается, нужно попробовать режим ингогнито.
+# ПРИМЕЧАНИЕ СТРОКА ЗАПУСКА - ngrok http 192.168.100.100 --host-header="easyshop.local.lab"
+# Если страници после этого не открывается, нужно попробовать режим ингогнито.
 
 # Создать файл логов
 sudo touch /var/log/ngrok.log
