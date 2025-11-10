@@ -1678,8 +1678,8 @@ echo $NGROK_URL > ~/ngrok-url.txt
 
 ### 10. CI/CD Jenkins
 
-#### Установка Jenkins (НАСТРОЙКА ПО ВИДЕО - установка плагинов и создание пайплайна)
-или по файлу https://github.com/sysops8/3-tier-project/blob/main/proxmox_easyshop_guide.md
+#### Установка Jenkins 
+
 SSH к jenkins:
 
 ```bash
@@ -1895,10 +1895,13 @@ git add .
 git commit -m "test: trigger pipeline"
 git push origin master
 
-# Pipeline должен автоматически запуститься в Jenkins
+# Pipeline должен автоматически запуститься в Jenkins так как Github отправит вебхук Jenkins.
 ```
+Примечание: Как вариант зайдите на github.com и добавьте просто комментарий в любой файл в репозитории.
 
 ---
+<img width="1919" height="953" alt="image" src="https://github.com/user-attachments/assets/b3ba67b4-14fa-4abb-ab2e-d251dd3e32be" />
+Картинка с завершенным Pipeline. Первый запуск Pipeline будет подольше, чем последующие.
 
 ---
 
