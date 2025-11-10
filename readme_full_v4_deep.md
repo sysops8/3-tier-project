@@ -527,6 +527,7 @@ sudo nano /etc/netplan/00-installer-config.yaml
 Содержимое:
 
 ```yaml
+sudo bash -c 'cat > /etc/netplan/00-installer-config.yaml <<EOF
 network:
   version: 2
   ethernets:
@@ -545,6 +546,7 @@ network:
       nameservers:
         addresses: [192.168.100.53]
         search: [local.lab]
+EOF'
 ```
 ```bash
 # Установка зависимости для netplan и настройка прав на файл сетевой конфигурации
