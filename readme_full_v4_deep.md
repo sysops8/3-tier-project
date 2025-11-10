@@ -13,7 +13,7 @@
 7. [Persistent Storage (Longhorn)](#persistent-storage-longhorn)
 8. [Ingress Controller (Traefik+Metalib)](#7-LoadBalancer-MetalLB)
 9. [Внешний доступ (ngrok Tunnel)](#9-Внешний-доступ-ngrok-Tunnel)
-10. [CI/CD (Jenkins)](#10-CI-)
+10. [CI/CD Jenkins](#10-CI-CD-Jenkins)
 11. [Мониторинг (Prometheus Stack)](#мониторинг-prometheus-stack)
 12. [Логирование (ELK Stack)](#логирование-elk-stack)
 13. [GitOps (ArgoCD)](#13-GitOps-ArgoCD)
@@ -1676,7 +1676,7 @@ echo $NGROK_URL > ~/ngrok-url.txt
 
 ---
 
-### 10. CI/CD (Jenkins)
+### 10. CI/CD Jenkins
 
 #### Установка Jenkins (НАСТРОЙКА ПО ВИДЕО - установка плагинов и создание пайплайна)
 или по файлу https://github.com/sysops8/3-tier-project/blob/main/proxmox_easyshop_guide.md
