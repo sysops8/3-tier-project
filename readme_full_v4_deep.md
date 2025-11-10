@@ -891,7 +891,9 @@ mc tree localminio
 - Password: `minioadmin123`
 
 ---
+<img width="1318" height="829" alt="image" src="https://github.com/user-attachments/assets/e1f92882-dc76-4930-b3ec-a580f8a17ae4" />
 
+---
 ## Kubernetes кластер (K3s)
 
 ### Подготовка нод
