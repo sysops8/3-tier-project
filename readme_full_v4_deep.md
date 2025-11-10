@@ -1579,7 +1579,8 @@ SSH к ngrok-tunnel:
 
 ```bash
 ssh admin@ngrok-tunnel.local.lab
-
+```
+```bash
 # Обновить систему
 sudo apt update && sudo apt upgrade -y
 
