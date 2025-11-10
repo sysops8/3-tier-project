@@ -2160,10 +2160,9 @@ helm repo add argo https://argoproj.github.io/argo-helm
 helm repo update
 
 # Получение values файла
-helm show values argo/argo-cd > argocd-values.yaml
-
+# helm show values argo/argo-cd > argocd-values.yaml
 # Редактирование values
-vi argocd-values.yaml
+# vi argocd-values.yaml
 ```
 
 Измените следующие параметры в `argocd-values.yaml`:
@@ -2199,7 +2198,7 @@ EOF
 В нужно добавить строки server.insecure: true и annotations в нужные места.
 ```bash
 # Установка с переустановкой 
-helm uninstall argocd -n argocd
+# helm uninstall argocd -n argocd
 helm install argocd argo/argo-cd \
   --namespace argocd \
   --values argocd-values-traefik.yaml
