@@ -1792,7 +1792,7 @@ sudo -u jenkins kubectl get nodes
 - **Kind**: Username with password
 - **ID**: `github-credentials`
 - **Username**: ваш GitHub username
-- **Password**: Personal Access Token (создайте на GitHub)
+- **Password**: Personal Access Token (создайте на GitHub -> Settings -> Developer Settings -> Personal Access tokens -> Fine Grained tokens -> Create)
 
 #### DockerHub credentials:
 - **Kind**: Username with password
