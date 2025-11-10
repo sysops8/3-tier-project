@@ -11,7 +11,7 @@
 5. [Object Storage (MinIO)](#object-storage-minio)
 6. [Kubernetes кластер (K3s)](#kubernetes-кластер-k3s)
 7. [Persistent Storage (Longhorn)](#persistent-storage-longhorn)
-8. [Ingress Controller (Traefik+Metalib)](#7-LoadBalancer-(MetalLB))
+8. [Ingress Controller (Traefik+Metalib)](#7-LoadBalancer-MetalLB)
 9. [Внешний доступ (ngrok Tunnel)](#внешний-доступ)
 10. [CI/CD (Jenkins)](#cicd-jenkins)
 11. [Мониторинг (Prometheus Stack)](#мониторинг-prometheus-stack)
