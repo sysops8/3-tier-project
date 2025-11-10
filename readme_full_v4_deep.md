@@ -1539,7 +1539,8 @@ sudo sed -i 's/Serial.*$/Serial: 3/' /etc/bind/zones/db.local.lab
 sudo rndc reload local.lab
 # exit
 # Тест доступа (порт не нужен!)
-curl http://test.local.lab
+curl -k https://test.local.lab
+# curl -i http://test.local.lab если http
 # Ожидается: Welcome to nginx!
 ```
 ```bash
