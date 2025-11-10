@@ -370,7 +370,7 @@ sudo bash -c 'cat > /etc/bind/zones/db.192.168.100 <<EOF
 60      IN      PTR     ngrok-tunnel.local.lab.
 53      IN      PTR     dns-server.local.lab.
 53      IN      PTR     ns1.local.lab.
-101     IN      PTR     jenkins.local.lab.
+19      IN      PTR     jenkins.local.lab.
 EOF'
 ```
 
