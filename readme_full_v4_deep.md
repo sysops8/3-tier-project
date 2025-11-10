@@ -1541,7 +1541,8 @@ sudo rndc reload local.lab
 # Тест доступа (порт не нужен!)
 curl http://test.local.lab
 # Ожидается: Welcome to nginx!
-
+```
+```bash
 # Очистка
 kubectl delete namespace test
 ```
