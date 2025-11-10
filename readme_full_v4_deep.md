@@ -1262,7 +1262,7 @@ alias helmtor='HTTPS_PROXY=socks5://127.0.0.1:9050 helm'
 helmtor repo add metallb https://metallb.github.io/metallb
 helmtor repo update
 ```
-👉 socks5h важно — оно гарантирует, что DNS тоже пойдёт через Tor, а не локально.
+socks5h важно — оно гарантирует, что DNS тоже пойдёт через Tor, а не локально.
 
 ---
 ### 7. LoadBalancer (MetalLB)
