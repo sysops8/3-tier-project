@@ -1183,6 +1183,7 @@ kubectl get storageclass
 ### Создание Ingress для Longhorn UI
 
 ```bash
+# Создаем простой Ingress без middleware
 cat <<EOF | kubectl apply -f -
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -1190,7 +1191,7 @@ metadata:
   name: longhorn-ingress
   namespace: longhorn-system
   annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: web
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
 spec:
   rules:
   - host: longhorn.local.lab
