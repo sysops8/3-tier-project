@@ -1782,7 +1782,6 @@ sudo -u jenkins kubectl get nodes
 - Kubernetes CLI
 - Git Parameter
 - Pipeline: Stage View
-- Blue Ocean
 
 ### 4. Настройка credentials
 
