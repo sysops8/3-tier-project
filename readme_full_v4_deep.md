@@ -1289,21 +1289,9 @@ MetalLB предоставляет тип сервиса LoadBalancer для bar
 helm repo add metallb https://metallb.github.io/metallb
 helm repo update
 
-# Создать namespace
-kubectl create namespace metallb-system
-
-# Установить MetalLB
-helm install metallb metallb/metallb \
-  --namespace metallb-system
-
-# Подождать готовности (30-60 секунд)
-kubectl -n metallb-system get pods -w
-```
-Если helm не может добавить репозиторий, то устанавливайте через Tor:
-```bash
-# Добавить Helm репозиторий
-torsocks helm repo add metallb https://metallb.github.io/metallb
-torsocks helm repo update
+# Вариант через Tor если провайдер блокирует установку
+# torsocks helm repo add metallb https://metallb.github.io/metallb
+# torsocks helm repo update
 
 # Создать namespace
 kubectl create namespace metallb-system
@@ -1417,8 +1405,12 @@ EOF
 #### Установка Traefik
 
 ```bash
-torsocks helm repo add traefik https://traefik.github.io/charts
-torsocks helm repo update
+helm repo add traefik https://traefik.github.io/charts
+helm repo update
+
+# Вариант через Tor если провайдер блокирует
+# torsocks helm repo add traefik https://traefik.github.io/charts
+# torsocks helm repo update
 
 kubectl create namespace traefik
 
