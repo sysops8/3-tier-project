@@ -1104,10 +1104,10 @@ k9s  # Интерактивный интерфейс
 ---
 
 ## Persistent Storage (Longhorn)
----
+
 <img width="1484" height="885" alt="image" src="https://github.com/user-attachments/assets/a2fdf209-8cca-403b-8f05-05c552ffaa08" />
 
----
+
 
 ### Подготовка worker нод
 
