@@ -1601,8 +1601,9 @@ ngrok version
 ```bash
 # Авторизация (замените YOUR_AUTHTOKEN на ваш токен из https://dashboard.ngrok.com)
 ngrok config add-authtoken YOUR_AUTHTOKEN
-
-# Создать конфигурацию
+```
+```bash
+# Создайте конфигурацию
 mkdir -p ~/.config/ngrok
 cat > ~/.config/ngrok/ngrok.yml <<EOF
 version: "2"
