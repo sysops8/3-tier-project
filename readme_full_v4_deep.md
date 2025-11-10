@@ -16,7 +16,7 @@
 10. [CI/CD (Jenkins)](#10-CI-)
 11. [Мониторинг (Prometheus Stack)](#мониторинг-prometheus-stack)
 12. [Логирование (ELK Stack)](#логирование-elk-stack)
-13. [GitOps (ArgoCD)](#gitops-argocd)
+13. [GitOps (ArgoCD)](#13-GitOps-ArgoCD)
 14. [Развертывание приложения EasyShop](#развертывание-приложения)
 15. [Заключение](#заключение)
 
