@@ -1427,15 +1427,16 @@ helm install traefik traefik/traefik \
 kubectl -n traefik get pods -w
 ```
 #### Установка  Traefik CRD
-CRD — это Custom Resource Definition (определение пользовательского ресурса) в Kubernetes.
-Проще говоря, CRD позволяет расширять Kubernetes новыми типами ресурсов, как будто это встроенные объекты вроде Pod, Service или Deployment.
-Когда вы создаёте CRD, вы фактически "регистрируете" новый тип ресурса, которым затем можно управлять с помощью kubectl, YAML-манифестов и API Kubernetes.
-**CRD в контексте Traefik:** Traefik — это ingress-контроллер (маршрутизатор для входящего трафика). Чтобы работать с Kubernetes в «native» стиле, Traefik использует собственные CRD, через которые можно описывать маршруты, middleware и т.д.
 ```bash
 # Установим Traefik CRD
 kubectl apply -f https://raw.githubusercontent.com/traefik/traefik/v2.9/docs/content/reference/dynamic-configuration/kubernetes-crd-definition-v1.yml
 kubectl apply -f https://raw.githubusercontent.com/traefik/traefik/v2.9/docs/content/reference/dynamic-configuration/kubernetes-crd-rbac.yml
 ```
+CRD — это Custom Resource Definition (определение пользовательского ресурса) в Kubernetes.
+Проще говоря, CRD позволяет расширять Kubernetes новыми типами ресурсов, как будто это встроенные объекты вроде Pod, Service или Deployment.
+Когда вы создаёте CRD, вы фактически "регистрируете" новый тип ресурса, которым затем можно управлять с помощью kubectl, YAML-манифестов и API Kubernetes.
+**CRD в контексте Traefik:** Traefik — это ingress-контроллер (маршрутизатор для входящего трафика). Чтобы работать с Kubernetes в «native» стиле, Traefik использует собственные CRD, через которые можно описывать маршруты, middleware и т.д.
+
 
 #### Проверка Traefik LoadBalancer
 
