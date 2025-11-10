@@ -1858,7 +1858,7 @@ source ~/.bashrc
 - **Save**
 
 ---
-### 3. Настройка GitHub Webhook
+### 6. Настройка GitHub Webhook
 
 1. Перейдите в Settings вашего репозитория на GitHub
 2. Webhooks → Add webhook
@@ -1867,7 +1867,7 @@ source ~/.bashrc
 5. **Events**: Just the push event
 6. **Active**: ✓
 
-### 4. Создание Jenkins Pipeline Job
+### 7. Создание Jenkins Pipeline Job
 
 В Jenkins:
 1. **New Item** → Введите имя `easyshop-pipeline` → **Pipeline** → OK
@@ -1884,7 +1884,7 @@ source ~/.bashrc
    - **Script Path**: Jenkinsfile
 5. **Save**
 
-### 5. Тестирование Pipeline
+### 8. Тестирование Pipeline
 
 ```bash
 # Сделайте изменение в коде
