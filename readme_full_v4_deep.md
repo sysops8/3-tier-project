@@ -1766,7 +1766,7 @@ sudo -u jenkins kubectl get nodes
 
 ### 2. Настройка Jenkins через Web UI
 
-Откройте в браузере: `http://jenkins.local.dev:8080`
+Откройте в браузере: `http://jenkins.local.lab:8080`
 
 1. Введите начальный пароль
 2. Установите рекомендуемые плагины
