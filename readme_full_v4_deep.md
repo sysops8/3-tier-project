@@ -867,6 +867,7 @@ mc admin info localminio
 ```bash
 # Bucket для Terraform state
 mc mb localminio/terraform-state
+# Buckets для docker-images/jenkins-artefacts/backups
 mc mb localminio/docker-images
 mc mb localminio/jenkins-artifacts
 mc mb localminio/backups
