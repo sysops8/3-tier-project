@@ -75,7 +75,7 @@ Traefik Ingress Controller (K3s)
 └────────────────────────────────────────────┘
     ↓                    ↓
 Jenkins CI          MinIO S3
-(192.168.100.101)   (192.168.100.20)
+(192.168.100.19)   (192.168.100.20)
 
 Infrastructure Services:
 - BIND9 DNS (192.168.100.53)
@@ -111,7 +111,7 @@ graph TB
 | k3s-master | 4 | 8GB | 60GB | 192.168.100.10 | K3s Control Plane |
 | k3s-worker-1 | 4 | 10GB | 80GB | 192.168.100.11 | K3s Worker Node |
 | k3s-worker-2 | 4 | 10GB | 80GB | 192.168.100.12 | K3s Worker Node |
-| jenkins | 2 | 4GB | 40GB | 192.168.100.101 | CI Server |
+| jenkins | 2 | 4GB | 40GB | 192.168.100.19 | CI Server |
 | minio | 2 | 4GB | 20GB+100GB | 192.168.100.20 | Object Storage |
 | jumphost | 1 | 2GB | 20GB | 10.0.10.102<br>192.168.100.5 | Management Host |
 
@@ -186,10 +186,11 @@ ip addr show vmbr1  # Проверка
 ├── 192.168.100.10   - k3s-master
 ├── 192.168.100.11   - k3s-worker-1
 ├── 192.168.100.12   - k3s-worker-2
+├── 192.168.100.19   - jenkins
 ├── 192.168.100.20   - minio
 ├── 192.168.100.60   - ngrok-tunnel (eth1) [NAT Gateway]
-├── 192.168.100.53   - dns-server (eth1)
-└── 192.168.100.101  - jenkins
+└── 192.168.100.53   - dns-server (eth1)
+
 ```
 
 ---
@@ -326,7 +327,7 @@ k3s-worker-1    IN      A       192.168.100.11
 k3s-worker-2    IN      A       192.168.100.12
 
 ; Дополнительные сервисы
-jenkins         IN      A       192.168.100.101
+jenkins         IN      A       192.168.100.19
 minio           IN      A       192.168.100.20
 
 ; Сервисные записи (Ingress)
