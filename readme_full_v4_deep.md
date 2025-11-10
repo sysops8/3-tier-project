@@ -610,7 +610,7 @@ network:
         addresses: [192.168.100.53]
         search: [local.lab]
 EOF'
-
+sudo apt update
 sudo apt install -y openvswitch-switch
 sudo chmod 600 /etc/netplan/00-installer-config.yaml
 sudo netplan apply
