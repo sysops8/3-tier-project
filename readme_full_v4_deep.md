@@ -13,7 +13,7 @@
 7. [Persistent Storage (Longhorn)](#persistent-storage-longhorn)
 8. [Ingress Controller (Traefik+Metalib)](#7-LoadBalancer-MetalLB)
 9. [Внешний доступ (ngrok Tunnel)](#9-Внешний-доступ-ngrok-Tunnel)
-10. [CI/CD (Jenkins)](#10-CI/CD-Jenkins)
+10. [CI/CD (Jenkins)](#10-CI--CD-Jenkins)
 11. [Мониторинг (Prometheus Stack)](#мониторинг-prometheus-stack)
 12. [Логирование (ELK Stack)](#логирование-elk-stack)
 13. [GitOps (ArgoCD)](#gitops-argocd)
