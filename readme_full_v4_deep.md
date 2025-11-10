@@ -1841,6 +1841,8 @@ source ~/.bashrc
 - **ID**: `kubeconfig`
 - **File**: загрузите k3s-kubeconfig
 
+Примечание: загрузка через браузер
+
 ### 5. Настройка Jenkins Shared Library
 
 **Manage Jenkins → System → Global Trusted Pipeline Libraries**
