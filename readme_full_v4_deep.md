@@ -2258,6 +2258,7 @@ argocd login argocd.local.lab \
    - **Repository URL**: `https://github.com/YOUR_USERNAME/tws-e-commerce-app`
    - **Revision**: master
    - **Path**: kubernetes
+   - В "Path" указываем каталог в репозитории в котором у нас файламы конфигурации кластера Kubernetes
 
 4. **Destination**:
    - **Cluster URL**: https://kubernetes.default.svc
