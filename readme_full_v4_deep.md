@@ -1528,14 +1528,16 @@ spec:
             port:
               number: 80
 EOF
-
+```
+```bash
 # Добавление DNS записи
 ssh admin@dns-server.local.lab
+```
+```bash
 sudo bash -c 'echo "test           IN      A       192.168.100.100" >> /etc/bind/zones/db.local.lab'
 sudo sed -i 's/Serial.*$/Serial: 3/' /etc/bind/zones/db.local.lab
 sudo rndc reload local.lab
-exit
-
+# exit
 # Тест доступа (порт не нужен!)
 curl http://test.local.lab
 # Ожидается: Welcome to nginx!
