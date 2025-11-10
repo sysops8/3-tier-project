@@ -975,7 +975,8 @@ sudo cat /var/lib/rancher/k3s/server/node-token
 
 ```bash
 ssh admin@k3s-worker-1.local.lab
-
+```
+```bash
 # Замените <TOKEN> на токен с master
 curl -sfL https://get.k3s.io | K3S_URL=https://k3s-master.local.lab:6443 \
   K3S_TOKEN="<TOKEN_FROM_MASTER>" \
@@ -991,7 +992,8 @@ sudo systemctl status k3s-agent
 
 ```bash
 ssh admin@k3s-worker-2.local.lab
-
+```
+```bash
 curl -sfL https://get.k3s.io | K3S_URL=https://k3s-master.local.lab:6443 \
   K3S_TOKEN="<TOKEN_FROM_MASTER>" \
   INSTALL_K3S_EXEC="agent" sh -s - \
@@ -1005,9 +1007,11 @@ sudo systemctl status k3s-agent
 
 На master:
 
+
 ```bash
 ssh admin@k3s-master.local.lab
-
+```
+```bash
 sudo kubectl get nodes -o wide
 # Ожидаем все 3 ноды в статусе Ready
 
