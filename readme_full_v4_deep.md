@@ -2159,7 +2159,7 @@ helm repo update
 helm show values argo/argo-cd > argocd-values.yaml
 
 # Редактирование values
-nano argocd-values.yaml
+vi argocd-values.yaml
 ```
 
 Измените следующие параметры в `argocd-values.yaml`:
