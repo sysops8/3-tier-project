@@ -1612,11 +1612,13 @@ authtoken: YOUR_AUTHTOKEN
 tunnels:
   easyshop:
     proto: http
-    addr: 192.168.100.100:80
-    host_header: rewrite
-#    bind_tls: true
+    addr: 192.168.100.100:443
+    host_header: "easyshop.local.lab"
+#   host_header: rewrite
+#   bind_tls: true
+#   -host-header="easyshop.local.lab"
 
-region: us
+region: eu
 log_level: info
 log_format: json
 log: /var/log/ngrok.log
