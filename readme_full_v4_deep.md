@@ -2239,7 +2239,7 @@ argocd login argocd.local.lab \
   --insecure
 
 # Изменение пароля через CLI
-argocd account update-password
+# argocd account update-password
 ```
 
 ### 4. Создание Application в ArgoCD
