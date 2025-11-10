@@ -2169,32 +2169,40 @@ vi argocd-values.yaml
 Измените следующие параметры в `argocd-values.yaml`:
 
 ```yaml
+cat > argocd-values-traefik.yaml << EOF
 global:
   domain: argocd.local.lab
 
 configs:
   params:
-    server.insecure: true  # Для работы за Nginx Ingress
+    server.insecure: "true" # Оставляем безопасный режим
+  secret:
+    create: true
 
 server:
+  service:
+    type: ClusterIP
+    
+  # Настройки для Traefik
   ingress:
     enabled: true
-    ingressClassName: nginx
+    ingressClassName: traefik
     annotations:
-      nginx.ingress.kubernetes.io/ssl-redirect: "false"
-      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+      traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
     hosts:
       - argocd.local.lab
     paths:
       - /
     pathType: Prefix
+EOF
 ```
 В нужно добавить строки server.insecure: true и annotations в нужные места.
 ```bash
-# Установка ArgoCD
+# Установка с переустановкой 
+helm uninstall argocd -n argocd
 helm install argocd argo/argo-cd \
   --namespace argocd \
-  --values argocd-values.yaml
+  --values argocd-values-traefik.yaml
 
 # Ожидание готовности подов
 kubectl wait --for=condition=ready pod \
