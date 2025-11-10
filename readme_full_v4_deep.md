@@ -23,12 +23,13 @@
 ---
 
 <img width="4715" height="2817" alt="image" src="https://github.com/user-attachments/assets/64f0c920-fbb8-4d07-a08c-76c28d42b50f" />
-Схема сети.
+- Схема сети.
 
 ---
 
-<img width="1718" height="760" alt="image" src="https://github.com/user-attachments/assets/66c6b4da-3b48-4592-96ee-ab865bb3a524" />
-Приложение.
+<img width="1919" height="946" alt="image" src="https://github.com/user-attachments/assets/bafa8adc-2b82-4785-b4e0-a0f44e8929a0" />
+
+- Приложение.
 
 ---
 
