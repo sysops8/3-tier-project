@@ -2255,7 +2255,7 @@ argocd login argocd.local.lab \
    - **Prune Resources**: ✓ (enabled)
    
 3. **Source**:
-   - **Repository URL**: `https://github.com/YOUR_USERNAME/tws-e-commerce-app`
+   - **Repository URL**: `https://github.com/sysops8(Поменяйте на свое)/tws-e-commerce-app_hackathon`
    - **Revision**: master
    - **Path**: kubernetes
    - В "Path" указываем каталог в репозитории в котором у нас файламы конфигурации кластера Kubernetes
