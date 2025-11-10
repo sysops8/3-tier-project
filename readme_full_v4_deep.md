@@ -2265,6 +2265,11 @@ argocd login argocd.local.lab \
    - **Namespace**: easyshop
 
 5. Нажмите **CREATE**
+---
+<img width="1919" height="920" alt="image" src="https://github.com/user-attachments/assets/c9bacc20-6a4c-472d-8715-3bc093a7e335" />
+- Установленный ArgoCD с конфигурацией по ссылке `https://github.com/sysops8/tws-e-commerce-app_hackathon/kubernetes`
+
+---
 
 #### Через манифест:
 
