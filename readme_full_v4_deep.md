@@ -2233,7 +2233,7 @@ sudo install -m 555 argocd-linux-amd64 /usr/local/bin/argocd
 rm argocd-linux-amd64
 
 # Логин через CLI
-argocd login argocd.local.dev \
+argocd login argocd.local.lab \
   --username admin \
   --password YOUR_PASSWORD \
   --insecure
