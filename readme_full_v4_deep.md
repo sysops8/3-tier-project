@@ -1802,8 +1802,37 @@ sudo -u jenkins kubectl get nodes
 
 #### Kubeconfig:
 ```bash
-# На jumphost скопируйте kubeconfig с master ноды
-scp ubuntu@192.168.100.10:~/.kube/config ./k3s-kubeconfig
+mkdir -p ~/.kube
+
+sudo scp admin@k3s-master.local.lab:/etc/rancher/k3s/k3s.yaml ~/.kube/config
+# Если ошибка permission denied, от на k3s-master вводим команду sudo chmod 644 /etc/rancher/k3s/k3s.yaml
+# После копирования, возвращаем права sudo chmod 600 /etc/rancher/k3s/k3s.yaml
+
+# Замена адреса сервера
+sed -i 's/127.0.0.1/k3s-master.local.lab/g' ~/.kube/config
+
+# Установка правильных прав
+chmod 600 ~/.kube/config
+
+# Проверка доступа
+kubectl get nodes
+kubectl cluster-info
+
+# Создание алиасов
+cat >> ~/.bashrc <<EOF
+
+# Kubernetes aliases
+alias k='kubectl'
+alias kgp='kubectl get pods'
+alias kgs='kubectl get svc'
+alias kgn='kubectl get nodes'
+alias kga='kubectl get all'
+alias kdp='kubectl describe pod'
+alias kl='kubectl logs'
+alias kex='kubectl exec -it'
+EOF
+
+source ~/.bashrc
 ```
 
 В Jenkins:
