@@ -1841,13 +1841,13 @@ source ~/.bashrc
 
 ### 5. Настройка Jenkins Shared Library
 
-**Manage Jenkins → System → Global Pipeline Libraries**
+**Manage Jenkins → System → Global Trusted Pipeline Libraries**
 
 - **Name**: `Shared`
 - **Default version**: `main`
 - **Retrieval method**: Modern SCM
 - **Source Code Management**: Git
-- **Project Repository**: форкните и используйте свой репозиторий
+- **Project Repository**: форкните репозиторий https://github.com/sysops8/jenkins-shared-libraries к себе в аккаунт на github и используйте как свой репозиторий
 
 ---
 
