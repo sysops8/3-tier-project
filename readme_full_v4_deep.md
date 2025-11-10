@@ -1848,6 +1848,8 @@ source ~/.bashrc
 - **Retrieval method**: Modern SCM
 - **Source Code Management**: Git
 - **Project Repository**: форкните репозиторий https://github.com/sysops8/jenkins-shared-libraries к себе в аккаунт на github и используйте как свой репозиторий
+- **Credentials**: "github_credentials" который мы до этого настраивали
+- **Save**
 
 ---
 
