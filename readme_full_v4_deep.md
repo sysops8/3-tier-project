@@ -574,7 +574,8 @@ ping -c 2 google.com
 
 ```bash
 ssh admin@jumphost.local.lab
-
+```
+```bash
 sudo systemctl disable systemd-resolved
 sudo systemctl stop systemd-resolved
 sudo rm -f /etc/resolv.conf
