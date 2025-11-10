@@ -2270,6 +2270,8 @@ argocd login argocd.local.lab \
 ---
 <img width="1919" height="920" alt="image" src="https://github.com/user-attachments/assets/c9bacc20-6a4c-472d-8715-3bc093a7e335" />
 - Установленный ArgoCD с конфигурацией по ссылке `https://github.com/sysops8/tws-e-commerce-app_hackathon/kubernetes`
+<img width="1919" height="1031" alt="image" src="https://github.com/user-attachments/assets/010221e1-69ad-42f8-aede-8a80b9806b1a" />
+- Приложение с доступом через ngrok
 
 ---
 
