@@ -2185,7 +2185,7 @@ server:
       - /
     pathType: Prefix
 ```
-
+В нужно добавить строки server.insecure: true и annotations в нужные места.
 ```bash
 # Установка ArgoCD
 helm install argocd argo/argo-cd \
