@@ -12,7 +12,7 @@
 6. [Kubernetes кластер (K3s)](#kubernetes-кластер-k3s)
 7. [Persistent Storage (Longhorn)](#persistent-storage-longhorn)
 8. [Ingress Controller (Traefik+Metalib)](#7-LoadBalancer-MetalLB)
-9. [Внешний доступ (ngrok Tunnel)](#внешний-доступ)
+9. [Внешний доступ (ngrok Tunnel)](#9-Внешний-доступ-ngrok-Tunnel)
 10. [CI/CD (Jenkins)](#cicd-jenkins)
 11. [Мониторинг (Prometheus Stack)](#мониторинг-prometheus-stack)
 12. [Логирование (ELK Stack)](#логирование-elk-stack)
