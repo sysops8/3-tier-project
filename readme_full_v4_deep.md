@@ -1154,7 +1154,12 @@ kubectl -n longhorn-system get pods -w
 kubectl -n longhorn-system get pods
 kubectl -n longhorn-system get daemonset
 ```
-
+```Display
+NAME                       DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+engine-image-ei-26bab25d   3         3         3       3            3           <none>          7m53s
+longhorn-csi-plugin        3         3         3       3            3           <none>          7m2s
+longhorn-manager           3         3         3       3            3           <none>          8m58s
+```
 ### Установка Longhorn как default StorageClass
 
 ```bash
