@@ -1858,6 +1858,47 @@ source ~/.bashrc
 - **Save**
 
 ---
+### 3. Настройка GitHub Webhook
+
+1. Перейдите в Settings вашего репозитория на GitHub
+2. Webhooks → Add webhook
+3. **Payload URL**: `http://YOUR_NGROK_URL/github-webhook/`
+4. **Content type**: `application/json`
+5. **Events**: Just the push event
+6. **Active**: ✓
+
+### 4. Создание Jenkins Pipeline Job
+
+В Jenkins:
+1. **New Item** → Введите имя `easyshop-pipeline` → **Pipeline** → OK
+2. **General**:
+   - ✓ GitHub project: `https://github.com/YOUR_USERNAME/tws-e-commerce-app`
+3. **Build Triggers**:
+   - ✓ GitHub hook trigger for GITScm polling
+4. **Pipeline**:
+   - **Definition**: Pipeline script from SCM
+   - **SCM**: Git
+   - **Repository URL**: `https://github.com/YOUR_USERNAME/tws-e-commerce-app`
+   - **Credentials**: github-credentials
+   - **Branch**: */master
+   - **Script Path**: Jenkinsfile
+5. **Save**
+
+### 5. Тестирование Pipeline
+
+```bash
+# Сделайте изменение в коде
+echo "// test change" >> src/app/page.tsx
+
+# Закоммитьте и запушьте
+git add .
+git commit -m "test: trigger pipeline"
+git push origin master
+
+# Pipeline должен автоматически запуститься в Jenkins
+```
+
+---
 
 ---
 
