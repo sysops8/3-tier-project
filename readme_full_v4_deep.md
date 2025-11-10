@@ -1729,6 +1729,8 @@ sudo apt install -y docker.io
 sudo systemctl enable docker
 sudo systemctl start docker
 sudo usermod -aG docker jenkins
+sudo getent group docker
+# Должен быть пользователь jenkins - docker:x:122:jenkins
 
 # Docker Compose
 sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
