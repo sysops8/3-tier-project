@@ -1286,6 +1286,22 @@ MetalLB предоставляет тип сервиса LoadBalancer для bar
 
 ```bash
 # Добавить Helm репозиторий
+helm repo add metallb https://metallb.github.io/metallb
+helm repo update
+
+# Создать namespace
+kubectl create namespace metallb-system
+
+# Установить MetalLB
+helm install metallb metallb/metallb \
+  --namespace metallb-system
+
+# Подождать готовности (30-60 секунд)
+kubectl -n metallb-system get pods -w
+```
+Если helm не может добавить репозиторий, то устанавливайте через Tor:
+```bash
+# Добавить Helm репозиторий
 torsocks helm repo add metallb https://metallb.github.io/metallb
 torsocks helm repo update
 
