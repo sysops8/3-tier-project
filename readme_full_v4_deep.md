@@ -1211,6 +1211,10 @@ kubectl -n longhorn-system get ingress
 ```
 
 Доступ к UI (после установки Traefik): `http://longhorn.local.lab`
+<img width="1915" height="953" alt="image" src="https://github.com/user-attachments/assets/a686d96c-ebda-4034-8619-2902e5d6215e" />
+
+Примечание: Данный интерйфейс будет доступен после установки Traefik.
+
 
 ---
 ### Эту настройку можно пропустить (дополнительная), нужна на тот случай если провайдеры блокируют интернет доступ к западным репозиториям
