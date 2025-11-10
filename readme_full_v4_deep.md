@@ -1618,7 +1618,8 @@ log_level: info
 log_format: json
 log: /var/log/ngrok.log
 EOF
-
+```
+```bash
 # Создать systemd service
 sudo tee /etc/systemd/system/ngrok.service > /dev/null <<EOF
 [Unit]
