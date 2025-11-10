@@ -1798,7 +1798,7 @@ sudo -u jenkins kubectl get nodes
 - **Kind**: Username with password
 - **ID**: `docker-hub-credentials`
 - **Username**: ваш DockerHub username
-- **Password**: ваш DockerHub password
+- **Password**: ваш DockerHub password (создайте на DockerHub -> Account Settings -> Personal Access tokens -> Create new token -> Access Permisions (read, write, delete)-> Create)
 
 #### Kubeconfig:
 ```bash
