@@ -2180,9 +2180,11 @@ helm install filebeat elastic/filebeat \
   --values /tmp/filebeat-values.yaml
 ```
 Проверка:
+```
 $ kubectl get pods -n logging | grep filebeat
-$ kubectl exec -it -n logging filebeat-filebeat-xxxx --   curl -u "elastic:$(kubectl get secret -n logging elasticsearch-master-credentials -o jsonpath='{.data.password}' | base64 -d)" -k   "https://elasticsearch-master.logging.svc.local.lab:9200/filebeat-*/_count"
-
+$ kubectl exec -it -n logging filebeat-filebeat-xxxx --
+curl -u "elastic:$(kubectl get secret -n logging elasticsearch-master-credentials -o jsonpath='{.data.password}' | base64 -d)" -k   "https://elasticsearch-master.logging.svc.local.lab:9200/filebeat-*/_count"
+```
 
 **Доступ**: `http://kibana.local.lab`
 
