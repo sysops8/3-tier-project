@@ -30,7 +30,7 @@
 <img width="1919" height="946" alt="image" src="https://github.com/user-attachments/assets/bafa8adc-2b82-4785-b4e0-a0f44e8929a0" />
 Приложение.
 
-Ссылка на видео где настраивается кластер в AWS -  [ проект](https://www.youtube.com/watch?v=0rDIt3dlrV4&t=111s)
+Ссылка на видео где настраивается кластер в AWS -  [ 3-Tier Production Ready DevOps Project on AWS EKS | CI/CD, Monitoring, Logging, TLS, GitOps 2025](https://www.youtube.com/watch?v=0rDIt3dlrV4&t=111s)
 
 ---
 
